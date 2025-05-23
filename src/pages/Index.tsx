@@ -6,9 +6,10 @@ import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import ForkliftCard from '@/components/forklift/ForkliftCard';
 import { Forklift, ForkliftStatus, ForkliftType } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAppContext } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 
-// Mock data for the dashboard
+// Mock data for the dashboard with better error handling
 const mockForklifts: Forklift[] = [
   {
     id: 'G001',
@@ -54,24 +55,44 @@ const mockForklifts: Forklift[] = [
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const { stats, isLoading } = useAppContext();
   const [currentDate, setCurrentDate] = useState<string>('');
   
   useEffect(() => {
-    // Set current date in Brazilian format
-    const now = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    };
-    setCurrentDate(now.toLocaleDateString('pt-BR', options));
-    
-    // First letter uppercase
-    setCurrentDate(prev => 
-      prev.charAt(0).toUpperCase() + prev.slice(1)
-    );
+    // Set current date in Brazilian format with error handling
+    try {
+      const now = new Date();
+      const options: Intl.DateTimeFormatOptions = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      };
+      const formattedDate = now.toLocaleDateString('pt-BR', options);
+      
+      // First letter uppercase
+      setCurrentDate(formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1));
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      setCurrentDate('Data não disponível');
+    }
   }, []);
+
+  const handleForkliftClick = (forklift: Forklift) => {
+    console.log(`Clicked on forklift ${forklift.id}:`, forklift);
+    // Here you could navigate to a detailed view or open a modal
+  };
+
+  if (isLoading && !stats) {
+    return (
+      <div className="flex min-h-screen bg-background items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+          <p className="text-muted-foreground">Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -92,7 +113,7 @@ const Index = () => {
           <section className="mt-8 slide-enter" style={{ animationDelay: '0.4s' }}>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold">Empilhadeiras Em Destaque</h2>
-              <button className="text-sm text-primary hover:underline">
+              <button className="text-sm text-primary hover:underline transition-colors">
                 Ver todas
               </button>
             </div>
@@ -102,7 +123,7 @@ const Index = () => {
                 <ForkliftCard 
                   key={forklift.id} 
                   forklift={forklift} 
-                  onClick={() => console.log(`Clicked on ${forklift.id}`)}
+                  onClick={() => handleForkliftClick(forklift)}
                 />
               ))}
             </div>

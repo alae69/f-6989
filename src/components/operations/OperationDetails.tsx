@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Operation } from '@/types';
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Gauge, Info, Map, Settings, Truck, User, Wrench } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface OperationDetailsProps {
   open: boolean;
@@ -24,41 +23,74 @@ interface OperationDetailsProps {
 const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDetailsProps) => {
   if (!operation) return null;
 
-  // Format date
+  // Format date with error handling
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', { 
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Data inválida';
+      }
+      return date.toLocaleDateString('pt-BR', { 
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Data inválida';
+    }
   };
 
-  // Format time
+  // Format time with error handling
   const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('pt-BR', { 
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Hora inválida';
+      }
+      return date.toLocaleTimeString('pt-BR', { 
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return 'Hora inválida';
+    }
   };
 
-  // Calculate operation duration
+  // Calculate operation duration with error handling
   const calculateDuration = () => {
-    if (!operation.endTime) {
-      const startTime = new Date(operation.startTime);
-      const now = new Date();
-      const diff = now.getTime() - startTime.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      return `${hours}h ${minutes}m (em andamento)`;
-    } else {
-      const startTime = new Date(operation.startTime);
-      const endTime = new Date(operation.endTime);
-      const diff = endTime.getTime() - startTime.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      return `${hours}h ${minutes}m`;
+    try {
+      if (!operation.endTime) {
+        const startTime = new Date(operation.startTime);
+        if (isNaN(startTime.getTime())) {
+          return 'Duração indisponível';
+        }
+        const now = new Date();
+        const diff = now.getTime() - startTime.getTime();
+        if (diff < 0) {
+          return 'Operação ainda não iniciada';
+        }
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        return `${hours}h ${minutes}m (em andamento)`;
+      } else {
+        const startTime = new Date(operation.startTime);
+        const endTime = new Date(operation.endTime);
+        if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+          return 'Duração indisponível';
+        }
+        const diff = endTime.getTime() - startTime.getTime();
+        if (diff < 0) {
+          return 'Dados inconsistentes';
+        }
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        return `${hours}h ${minutes}m`;
+      }
+    } catch (error) {
+      console.error('Error calculating duration:', error);
+      return 'Erro no cálculo';
     }
   };
 
@@ -68,7 +100,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <span className="text-xl">Operação #{operation.id}</span>
-            <Badge variant={operation.status === 'active' ? 'success' : 'default'}>
+            <Badge variant={operation.status === 'active' ? 'default' : 'secondary'}>
               {operation.status === 'active' ? 'Em Andamento' : 'Concluída'}
             </Badge>
           </DialogTitle>
@@ -90,7 +122,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Operador</span>
                 </div>
-                <span className="text-sm font-medium">{operation.operatorName}</span>
+                <span className="text-sm font-medium">{operation.operatorName || 'N/A'}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
@@ -106,7 +138,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <Map className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Setor</span>
                 </div>
-                <span className="text-sm font-medium">{operation.sector}</span>
+                <span className="text-sm font-medium">{operation.sector || 'N/A'}</span>
               </div>
             </div>
           </div>
@@ -147,11 +179,13 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
           <div className="grid grid-cols-2 gap-4 p-3 bg-muted/20 rounded-md">
             <div>
               <span className="text-sm text-muted-foreground">Inicial</span>
-              <div className="text-lg font-medium">{operation.initialHourMeter}</div>
+              <div className="text-lg font-medium">{operation.initialHourMeter?.toLocaleString() || 'N/A'}</div>
             </div>
             <div>
               <span className="text-sm text-muted-foreground">Atual/Final</span>
-              <div className="text-lg font-medium">{operation.currentHourMeter || operation.initialHourMeter}</div>
+              <div className="text-lg font-medium">
+                {(operation.currentHourMeter || operation.initialHourMeter)?.toLocaleString() || 'N/A'}
+              </div>
             </div>
           </div>
           

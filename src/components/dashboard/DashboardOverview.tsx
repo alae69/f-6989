@@ -3,35 +3,33 @@ import React from 'react';
 import StatusCard from './StatusCard';
 import { 
   Truck, Users, AlertTriangle, CheckCircle, 
-  Clock, Fuel, Settings, Calendar
+  Clock, Fuel, Settings, Calendar, RefreshCw
 } from 'lucide-react';
-import { DashboardStats } from '@/types';
+import { useAppContext } from '@/contexts/AppContext';
+import { Button } from '@/components/ui/button';
 
-// Mock data for initial rendering
-const initialStats: DashboardStats = {
-  totalForklifts: 15,
-  operationalForklifts: 9,
-  stoppedForklifts: 3,
-  maintenanceForklifts: 3,
-  totalOperators: 20,
-  operatorsWithValidCertificates: 16,
-  operatorsWithWarningCertificates: 3,
-  operatorsWithExpiredCertificates: 1,
-  activeOperations: 7,
-  pendingMaintenances: 4
-};
+const DashboardOverview: React.FC = () => {
+  const { stats, refreshStats, isLoading } = useAppContext();
 
-interface DashboardOverviewProps {
-  stats?: DashboardStats;
-}
-
-const DashboardOverview: React.FC<DashboardOverviewProps> = ({ 
-  stats = initialStats 
-}) => {
   return (
     <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div className="slide-enter" style={{ animationDelay: '0.1s' }}>
+          <h2 className="text-2xl font-semibold">Status da Frota</h2>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={refreshStats}
+          disabled={isLoading}
+          className="flex items-center gap-2"
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+          Atualizar
+        </Button>
+      </div>
+      
       <div className="slide-enter" style={{ animationDelay: '0.1s' }}>
-        <h2 className="text-2xl font-semibold mb-4">Status da Frota</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatusCard 
             title="Total de Empilhadeiras" 
