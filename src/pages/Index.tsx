@@ -15,9 +15,9 @@ const mockForklifts: Forklift[] = [
     id: 'G001',
     model: 'Toyota 8FGU25',
     type: ForkliftType.GAS,
-    capacity: '2.500 kg',
-    acquisitionDate: '10/05/2022',
-    lastMaintenance: '15/09/2023',
+    capacity: '2,500 kg',
+    acquisitionDate: '05/10/2022',
+    lastMaintenance: '09/15/2023',
     status: ForkliftStatus.OPERATIONAL,
     hourMeter: 12583,
   },
@@ -25,9 +25,9 @@ const mockForklifts: Forklift[] = [
     id: 'E002',
     model: 'Hyster E50XN',
     type: ForkliftType.ELECTRIC,
-    capacity: '2.250 kg',
-    acquisitionDate: '22/11/2021',
-    lastMaintenance: '30/10/2023',
+    capacity: '2,250 kg',
+    acquisitionDate: '11/22/2021',
+    lastMaintenance: '10/30/2023',
     status: ForkliftStatus.OPERATIONAL,
     hourMeter: 8452,
   },
@@ -35,9 +35,9 @@ const mockForklifts: Forklift[] = [
     id: 'R003',
     model: 'Crown RR5725',
     type: ForkliftType.RETRACTABLE,
-    capacity: '1.800 kg',
-    acquisitionDate: '04/03/2022',
-    lastMaintenance: '12/08/2023',
+    capacity: '1,800 kg',
+    acquisitionDate: '03/04/2022',
+    lastMaintenance: '08/12/2023',
     status: ForkliftStatus.MAINTENANCE,
     hourMeter: 10974,
   },
@@ -45,9 +45,9 @@ const mockForklifts: Forklift[] = [
     id: 'G004',
     model: 'Yale GLP050',
     type: ForkliftType.GAS,
-    capacity: '2.200 kg',
-    acquisitionDate: '18/07/2022',
-    lastMaintenance: '05/11/2023',
+    capacity: '2,200 kg',
+    acquisitionDate: '07/18/2022',
+    lastMaintenance: '11/05/2023',
     status: ForkliftStatus.STOPPED,
     hourMeter: 6782,
   },
@@ -59,7 +59,7 @@ const Index = () => {
   const [currentDate, setCurrentDate] = useState<string>('');
   
   useEffect(() => {
-    // Set current date in Brazilian format with error handling
+    // Set current date in English format with error handling
     try {
       const now = new Date();
       const options: Intl.DateTimeFormatOptions = { 
@@ -68,13 +68,13 @@ const Index = () => {
         month: 'long', 
         day: 'numeric' 
       };
-      const formattedDate = now.toLocaleDateString('pt-BR', options);
+      const formattedDate = now.toLocaleDateString('en-US', options);
       
       // First letter uppercase
       setCurrentDate(formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1));
     } catch (error) {
       console.error('Error formatting date:', error);
-      setCurrentDate('Data não disponível');
+      setCurrentDate('Date not available');
     }
   }, []);
 
@@ -88,7 +88,7 @@ const Index = () => {
       <div className="flex min-h-screen bg-background items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-          <p className="text-muted-foreground">Carregando dados...</p>
+          <p className="text-muted-foreground">Loading data...</p>
         </div>
       </div>
     );
@@ -112,9 +112,9 @@ const Index = () => {
           
           <section className="mt-8 slide-enter" style={{ animationDelay: '0.4s' }}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold">Empilhadeiras Em Destaque</h2>
+              <h2 className="text-2xl font-semibold">Featured Forklifts</h2>
               <button className="text-sm text-primary hover:underline transition-colors">
-                Ver todas
+                View all
               </button>
             </div>
             

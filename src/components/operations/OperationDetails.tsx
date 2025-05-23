@@ -28,16 +28,16 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) {
-        return 'Data inválida';
+        return 'Invalid date';
       }
-      return date.toLocaleDateString('pt-BR', { 
+      return date.toLocaleDateString('en-US', { 
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
     } catch (error) {
       console.error('Error formatting date:', error);
-      return 'Data inválida';
+      return 'Invalid date';
     }
   };
 
@@ -46,15 +46,15 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) {
-        return 'Hora inválida';
+        return 'Invalid time';
       }
-      return date.toLocaleTimeString('pt-BR', { 
+      return date.toLocaleTimeString('en-US', { 
         hour: '2-digit',
         minute: '2-digit'
       });
     } catch (error) {
       console.error('Error formatting time:', error);
-      return 'Hora inválida';
+      return 'Invalid time';
     }
   };
 
@@ -64,25 +64,25 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
       if (!operation.endTime) {
         const startTime = new Date(operation.startTime);
         if (isNaN(startTime.getTime())) {
-          return 'Duração indisponível';
+          return 'Duration unavailable';
         }
         const now = new Date();
         const diff = now.getTime() - startTime.getTime();
         if (diff < 0) {
-          return 'Operação ainda não iniciada';
+          return 'Operation not yet started';
         }
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        return `${hours}h ${minutes}m (em andamento)`;
+        return `${hours}h ${minutes}m (ongoing)`;
       } else {
         const startTime = new Date(operation.startTime);
         const endTime = new Date(operation.endTime);
         if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-          return 'Duração indisponível';
+          return 'Duration unavailable';
         }
         const diff = endTime.getTime() - startTime.getTime();
         if (diff < 0) {
-          return 'Dados inconsistentes';
+          return 'Inconsistent data';
         }
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -90,7 +90,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
       }
     } catch (error) {
       console.error('Error calculating duration:', error);
-      return 'Erro no cálculo';
+      return 'Calculation error';
     }
   };
 
@@ -99,13 +99,13 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span className="text-xl">Operação #{operation.id}</span>
+            <span className="text-xl">Operation #{operation.id}</span>
             <Badge variant={operation.status === 'active' ? 'default' : 'secondary'}>
-              {operation.status === 'active' ? 'Em Andamento' : 'Concluída'}
+              {operation.status === 'active' ? 'In Progress' : 'Completed'}
             </Badge>
           </DialogTitle>
           <DialogDescription>
-            Iniciada em: {formatDate(operation.startTime)} às {formatTime(operation.startTime)}
+            Started on: {formatDate(operation.startTime)} at {formatTime(operation.startTime)}
           </DialogDescription>
         </DialogHeader>
         
@@ -113,14 +113,14 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Info className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Informações Gerais</span>
+              <span className="text-sm font-medium">General Information</span>
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Operador</span>
+                  <span className="text-sm">Operator</span>
                 </div>
                 <span className="text-sm font-medium">{operation.operatorName || 'N/A'}</span>
               </div>
@@ -128,7 +128,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
                   <Truck className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Empilhadeira</span>
+                  <span className="text-sm">Forklift</span>
                 </div>
                 <span className="text-sm font-medium">{operation.forkliftModel} ({operation.forkliftId})</span>
               </div>
@@ -136,7 +136,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
                   <Map className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Setor</span>
+                  <span className="text-sm">Sector</span>
                 </div>
                 <span className="text-sm font-medium">{operation.sector || 'N/A'}</span>
               </div>
@@ -146,24 +146,24 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Período e Duração</span>
+              <span className="text-sm font-medium">Period and Duration</span>
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2">
-                <span className="text-sm">Início</span>
+                <span className="text-sm">Start</span>
                 <span className="text-sm font-medium">{formatTime(operation.startTime)}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
-                <span className="text-sm">Término</span>
+                <span className="text-sm">End</span>
                 <span className="text-sm font-medium">
-                  {operation.endTime ? formatTime(operation.endTime) : 'Em andamento'}
+                  {operation.endTime ? formatTime(operation.endTime) : 'In progress'}
                 </span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
-                <span className="text-sm">Duração</span>
+                <span className="text-sm">Duration</span>
                 <span className="text-sm font-medium">{calculateDuration()}</span>
               </div>
             </div>
@@ -173,16 +173,16 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
         <div className="mt-4 space-y-4">
           <div className="flex items-center gap-2">
             <Gauge className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Horímetro</span>
+            <span className="text-sm font-medium">Hour Meter</span>
           </div>
           
           <div className="grid grid-cols-2 gap-4 p-3 bg-muted/20 rounded-md">
             <div>
-              <span className="text-sm text-muted-foreground">Inicial</span>
+              <span className="text-sm text-muted-foreground">Initial</span>
               <div className="text-lg font-medium">{operation.initialHourMeter?.toLocaleString() || 'N/A'}</div>
             </div>
             <div>
-              <span className="text-sm text-muted-foreground">Atual/Final</span>
+              <span className="text-sm text-muted-foreground">Current/Final</span>
               <div className="text-lg font-medium">
                 {(operation.currentHourMeter || operation.initialHourMeter)?.toLocaleString() || 'N/A'}
               </div>
@@ -193,12 +193,12 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
             <div className="mt-4">
               <div className="flex items-center gap-2 mb-3">
                 <Wrench className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Consumo de Combustível</span>
+                <span className="text-sm font-medium">Fuel Consumption</span>
               </div>
               
               <div className="p-3 bg-muted/20 rounded-md">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm">Consumo Total</span>
+                  <span className="text-sm">Total Consumption</span>
                   <span className="text-sm font-medium">{operation.gasConsumption} L</span>
                 </div>
               </div>
@@ -208,10 +208,10 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
         
         <DialogFooter className="gap-2 mt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fechar
+            Close
           </Button>
           <Button onClick={onEdit}>
-            Editar Operação
+            Edit Operation
           </Button>
         </DialogFooter>
       </DialogContent>

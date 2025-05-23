@@ -17,7 +17,6 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CalendarIcon } from 'lucide-react';
 
@@ -39,10 +38,10 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       role: UserRole.OPERATOR,
       cpf: '',
       contact: '',
-      shift: 'Manhã',
-      registrationDate: format(new Date(), 'dd/MM/yyyy'),
-      asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
-      nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
+      shift: 'Morning',
+      registrationDate: format(new Date(), 'MM/dd/yyyy'),
+      asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'MM/dd/yyyy'),
+      nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'MM/dd/yyyy'),
       asoStatus: CertificateStatus.REGULAR,
       nrStatus: CertificateStatus.REGULAR
     }
@@ -50,7 +49,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
 
   // Convert date string to Date object for Calendar
   const parseDate = (dateStr: string): Date => {
-    const [day, month, year] = dateStr.split('/').map(Number);
+    const [month, day, year] = dateStr.split('/').map(Number);
     return new Date(year, month - 1, day);
   };
 
@@ -63,7 +62,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
   const handleDateChange = (field: 'asoExpirationDate' | 'nrExpirationDate', date: Date | undefined) => {
     if (!date) return;
     
-    const formattedDate = format(date, 'dd/MM/yyyy');
+    const formattedDate = format(date, 'MM/dd/yyyy');
     setFormData(prev => ({ ...prev, [field]: formattedDate }));
     
     // Update certificate status based on date
@@ -92,8 +91,8 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     // Validate form
     if (!formData.name || !formData.cpf || !formData.contact) {
       toast({
-        title: "Erro ao salvar",
-        description: "Preencha todos os campos obrigatórios",
+        title: "Error saving",
+        description: "Please fill in all required fields",
         variant: "destructive"
       });
       return;
@@ -110,10 +109,10 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
         role: UserRole.OPERATOR,
         cpf: '',
         contact: '',
-        shift: 'Manhã',
-        registrationDate: format(new Date(), 'dd/MM/yyyy'),
-        asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
-        nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
+        shift: 'Morning',
+        registrationDate: format(new Date(), 'MM/dd/yyyy'),
+        asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'MM/dd/yyyy'),
+        nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'MM/dd/yyyy'),
         asoStatus: CertificateStatus.REGULAR,
         nrStatus: CertificateStatus.REGULAR
       });
@@ -122,8 +121,8 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     onOpenChange(false);
     
     toast({
-      title: isEditing ? "Operador atualizado" : "Operador adicionado",
-      description: `${formData.name} foi ${isEditing ? 'atualizado' : 'adicionado'} com sucesso!`
+      title: isEditing ? "Operator updated" : "Operator added",
+      description: `${formData.name} has been ${isEditing ? 'updated' : 'added'} successfully!`
     });
   };
 
@@ -131,37 +130,37 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Operador' : 'Adicionar Novo Operador'}</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Operator' : 'Add New Operator'}</DialogTitle>
           <DialogDescription>
             {isEditing 
-              ? 'Edite as informações do operador nos campos abaixo.' 
-              : 'Preencha as informações do novo operador nos campos abaixo.'}
+              ? 'Edit the operator information in the fields below.' 
+              : 'Fill in the new operator information in the fields below.'}
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input 
                 id="name" 
                 value={formData.name} 
                 onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Nome do operador"
+                placeholder="Operator name"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="role">Função</Label>
+              <Label htmlFor="role">Role</Label>
               <Select 
                 value={formData.role} 
                 onValueChange={(value) => handleChange('role', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione a função" />
+                  <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={UserRole.OPERATOR}>Operador</SelectItem>
+                  <SelectItem value={UserRole.OPERATOR}>Operator</SelectItem>
                   <SelectItem value={UserRole.SUPERVISOR}>Supervisor</SelectItem>
                 </SelectContent>
               </Select>
@@ -178,7 +177,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact">Contato</Label>
+              <Label htmlFor="contact">Contact</Label>
               <Input 
                 id="contact" 
                 value={formData.contact} 
@@ -188,26 +187,26 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="shift">Turno</Label>
+              <Label htmlFor="shift">Shift</Label>
               <Select 
                 value={formData.shift} 
                 onValueChange={(value) => handleChange('shift', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o turno" />
+                  <SelectValue placeholder="Select shift" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Manhã">Manhã</SelectItem>
-                  <SelectItem value="Tarde">Tarde</SelectItem>
-                  <SelectItem value="Noite">Noite</SelectItem>
-                  <SelectItem value="Integral">Integral</SelectItem>
+                  <SelectItem value="Morning">Morning</SelectItem>
+                  <SelectItem value="Afternoon">Afternoon</SelectItem>
+                  <SelectItem value="Night">Night</SelectItem>
+                  <SelectItem value="Full">Full</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label>Validade do ASO</Label>
+            <Label>ASO Expiration Date</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -223,7 +222,6 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
                   mode="single"
                   selected={parseDate(formData.asoExpirationDate || '')}
                   onSelect={(date) => handleDateChange('asoExpirationDate', date)}
-                  locale={ptBR}
                   className={cn("p-3 pointer-events-auto")}
                 />
               </PopoverContent>
@@ -231,7 +229,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
           </div>
           
           <div className="space-y-2">
-            <Label>Validade da NR-11</Label>
+            <Label>NR-11 Expiration Date</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -247,7 +245,6 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
                   mode="single"
                   selected={parseDate(formData.nrExpirationDate || '')}
                   onSelect={(date) => handleDateChange('nrExpirationDate', date)}
-                  locale={ptBR}
                   className={cn("p-3 pointer-events-auto")}
                 />
               </PopoverContent>
@@ -256,9 +253,9 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
           
           <DialogFooter>
             <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
-              Cancelar
+              Cancel
             </Button>
-            <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Adicionar Operador'}</Button>
+            <Button type="submit">{isEditing ? 'Save Changes' : 'Add Operator'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

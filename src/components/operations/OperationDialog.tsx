@@ -112,8 +112,8 @@ const OperationDialog = ({
     // Validate form
     if (!formData.operatorId || !formData.forkliftId || !formData.sector || !formData.startTime) {
       toast({
-        title: "Erro de validação",
-        description: "Por favor, preencha todos os campos obrigatórios.",
+        title: "Validation error",
+        description: "Please fill in all required fields.",
         variant: "destructive"
       });
       return;
@@ -148,8 +148,8 @@ const OperationDialog = ({
     onOpenChange(false);
     
     toast({
-      title: "Operação concluída",
-      description: "A operação foi finalizada com sucesso."
+      title: "Operation completed",
+      description: "The operation has been completed successfully."
     });
   };
 
@@ -158,20 +158,20 @@ const OperationDialog = ({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? 'Editar Operação' : 'Nova Operação'}
+            {isEditing ? 'Edit Operation' : 'New Operation'}
           </DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="operatorId">Operador</Label>
+              <Label htmlFor="operatorId">Operator</Label>
               <Select 
                 value={formData.operatorId} 
                 onValueChange={handleOperatorChange}
               >
                 <SelectTrigger id="operatorId">
-                  <SelectValue placeholder="Selecione um operador" />
+                  <SelectValue placeholder="Select an operator" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableOperators.map(operator => (
@@ -184,13 +184,13 @@ const OperationDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="forkliftId">Empilhadeira</Label>
+              <Label htmlFor="forkliftId">Forklift</Label>
               <Select 
                 value={formData.forkliftId}
                 onValueChange={handleForkliftChange}
               >
                 <SelectTrigger id="forkliftId">
-                  <SelectValue placeholder="Selecione uma empilhadeira" />
+                  <SelectValue placeholder="Select a forklift" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableForklifts.map(forklift => (
@@ -204,19 +204,19 @@ const OperationDialog = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="sector">Setor</Label>
+            <Label htmlFor="sector">Sector</Label>
             <Input
               id="sector"
               name="sector"
               value={formData.sector}
               onChange={handleChange}
-              placeholder="Ex: Armazém A, Expedição, etc."
+              placeholder="Ex: Warehouse A, Shipping, etc."
             />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="initialHourMeter">Horímetro Inicial</Label>
+              <Label htmlFor="initialHourMeter">Initial Hour Meter</Label>
               <Input
                 id="initialHourMeter"
                 name="initialHourMeter"
@@ -227,7 +227,7 @@ const OperationDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="currentHourMeter">Horímetro Atual</Label>
+              <Label htmlFor="currentHourMeter">Current Hour Meter</Label>
               <Input
                 id="currentHourMeter"
                 name="currentHourMeter"
@@ -240,7 +240,7 @@ const OperationDialog = ({
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="startTime">Data/Hora de Início</Label>
+              <Label htmlFor="startTime">Start Date/Time</Label>
               <Input
                 id="startTime"
                 name="startTime"
@@ -252,7 +252,7 @@ const OperationDialog = ({
             
             {isEditing && (
               <div className="space-y-2">
-                <Label htmlFor="endTime">Data/Hora de Término</Label>
+                <Label htmlFor="endTime">End Date/Time</Label>
                 <Input
                   id="endTime"
                   name="endTime"
@@ -267,7 +267,7 @@ const OperationDialog = ({
           
           {isEditing && (
             <div className="space-y-2">
-              <Label htmlFor="gasConsumption">Consumo de Combustível (L)</Label>
+              <Label htmlFor="gasConsumption">Fuel Consumption (L)</Label>
               <Input
                 id="gasConsumption"
                 name="gasConsumption"
@@ -275,7 +275,7 @@ const OperationDialog = ({
                 step="0.1"
                 value={formData.gasConsumption || ''}
                 onChange={handleChange}
-                placeholder="Opcional"
+                placeholder="Optional"
               />
             </div>
           )}
@@ -288,14 +288,14 @@ const OperationDialog = ({
                 className="mr-auto" 
                 onClick={handleComplete}
               >
-                Finalizar Operação
+                Complete Operation
               </Button>
             )}
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit">
-              {isEditing ? 'Salvar Alterações' : 'Criar Operação'}
+              {isEditing ? 'Save Changes' : 'Create Operation'}
             </Button>
           </DialogFooter>
         </form>
