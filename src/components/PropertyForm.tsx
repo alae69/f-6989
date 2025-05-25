@@ -2,79 +2,51 @@
 import React, { useState } from 'react';
 import { Property } from '@/data/properties';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-// Define the schema for property form validation
-const propertySchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters'),
-  description: z.string().min(20, 'Description must be at least 20 characters'),
-  price: z.coerce.number().positive('Price must be positive'),
-  priceUnit: z.string(),
-  location: z.string().min(3, 'Location is required'),
-  bedrooms: z.coerce.number().int().positive('Bedrooms must be at least 1'),
-  bathrooms: z.coerce.number().int().positive('Bathrooms must be at least 1'),
-  capacity: z.coerce.number().int().positive('Capacity must be at least 1'),
-  featured: z.boolean().default(false),
-});
-
-type PropertyFormValues = z.infer<typeof propertySchema> & {
-  amenities: string[];
-  images: string[];
-};
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface PropertyFormProps {
   property?: Property;
-  onSubmit: (data: PropertyFormValues) => void;
+  onSubmit: (data: any) => void;
   onCancel: () => void;
 }
 
 const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCancel }) => {
   const { toast } = useToast();
-  const defaultAmenities = [
-    'Private Pool', 'Ocean View', 'Air Conditioning', 'Free WiFi', 
-    'Full Kitchen', 'Terrace', 'Garden', 'BBQ Area', 'Parking',
-    'Courtyard', 'Rooftop Terrace', 'Traditional Hammam'
-  ];
+  
+  // Simple form state
+  const [formData, setFormData] = useState({
+    title: property?.title || '',
+    description: property?.description || '',
+    price: property?.price || '',
+    location: property?.location || '',
+    bedrooms: property?.bedrooms || 1,
+    bathrooms: property?.bathrooms || 1,
+    capacity: property?.capacity || 2,
+  });
   
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>(
     property?.amenities || []
   );
   
   const [images, setImages] = useState<string[]>(
-    property?.images || ['', '', '']
+    property?.images || []
   );
 
-  const form = useForm<PropertyFormValues>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      title: property?.title || '',
-      description: property?.description || '',
-      price: property?.price || 0,
-      priceUnit: property?.priceUnit || 'night',
-      location: property?.location || '',
-      bedrooms: property?.bedrooms || 1,
-      bathrooms: property?.bathrooms || 1,
-      capacity: property?.capacity || 1,
-      featured: property?.featured || false,
-      amenities: property?.amenities || [],
-      images: property?.images || [],
-    },
-  });
+  // Simple amenities list
+  const popularAmenities = [
+    'WiFi', 'Kitchen', 'Air conditioning', 'Heating', 'TV',
+    'Pool', 'Parking', 'Garden', 'Balcony', 'Pet friendly'
+  ];
 
-  const handleAmenityChange = (amenity: string) => {
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAmenityToggle = (amenity: string) => {
     setSelectedAmenities(prev => 
       prev.includes(amenity)
         ? prev.filter(a => a !== amenity)
@@ -82,326 +54,272 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
     );
   };
 
-  const handleImageUpload = (index: number) => {
-    // Create a file input element
+  const handleImageUpload = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
+    fileInput.multiple = true;
     
     fileInput.addEventListener('change', (e: Event) => {
       const target = e.target as HTMLInputElement;
-      if (target.files && target.files[0]) {
-        const file = target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = (loadEvent) => {
-          const result = loadEvent.target?.result as string;
-          setImages(prev => {
-            const newImages = [...prev];
-            newImages[index] = result;
-            return newImages;
-          });
-          toast({
-            title: "Image uploaded",
-            description: "Your image has been successfully uploaded.",
-          });
-        };
-        
-        reader.readAsDataURL(file);
+      if (target.files) {
+        Array.from(target.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (loadEvent) => {
+            const result = loadEvent.target?.result as string;
+            setImages(prev => [...prev, result]);
+          };
+          reader.readAsDataURL(file);
+        });
+        toast({
+          title: "Images uploaded",
+          description: `${target.files.length} image(s) added successfully.`,
+        });
       }
     });
     
-    // Trigger file input click
     fileInput.click();
   };
 
   const handleRemoveImage = (index: number) => {
-    setImages(prev => {
-      const newImages = [...prev];
-      newImages[index] = '';
-      return newImages;
-    });
+    setImages(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleFormSubmit = (data: z.infer<typeof propertySchema>) => {
-    // Add the selected amenities and images to the form data
-    const formData: PropertyFormValues = {
-      ...data,
-      amenities: selectedAmenities,
-      images: images.filter(img => img !== ''),
-    };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     
-    // If no images were uploaded, show an error
-    if (formData.images.length === 0) {
+    // Simple validation
+    if (!formData.title || !formData.location || !formData.price) {
       toast({
-        title: "Error",
-        description: "Please upload at least one image",
+        title: "Missing information",
+        description: "Please fill in the title, location, and price.",
         variant: "destructive",
       });
       return;
     }
-    
-    onSubmit(formData);
+
+    if (images.length === 0) {
+      toast({
+        title: "Add photos",
+        description: "Please add at least one photo of your property.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const propertyData = {
+      ...formData,
+      price: Number(formData.price),
+      priceUnit: 'night',
+      amenities: selectedAmenities,
+      images: images,
+      featured: false,
+    };
+
+    onSubmit(propertyData);
   };
 
   return (
-    <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm">
       <div className="p-6 border-b">
-        <h2 className="text-lg font-medium">{property ? 'Edit Property' : 'Add New Property'}</h2>
+        <h1 className="text-2xl font-medium mb-2">
+          {property ? 'Update your listing' : 'List your place'}
+        </h1>
+        <p className="text-gray-600">
+          Share some basic info about your place
+        </p>
       </div>
-      
-      <div className="p-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              {/* Basic property details */}
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Property Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <div className="flex">
-                        <span className="inline-flex items-center px-3 border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm rounded-l-lg">
-                          $
-                        </span>
-                        <Input 
-                          type="number" 
-                          className="rounded-l-none"
-                          {...field} 
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="priceUnit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price Unit</FormLabel>
-                    <FormControl>
-                      <select
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-moroccan-blue focus:border-moroccan-blue"
-                        {...field}
-                      >
-                        <option value="night">Per Night</option>
-                        <option value="week">Per Week</option>
-                        <option value="month">Per Month</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="bedrooms"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bedrooms</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="bathrooms"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bathrooms</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="capacity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Max Guests</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="featured"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <div className="flex items-center space-x-4">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="status"
-                            value="standard"
-                            checked={!field.value}
-                            onChange={() => form.setValue('featured', false)}
-                            className="h-4 w-4 text-moroccan-blue focus:ring-moroccan-blue border-gray-300"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">Standard</span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="status"
-                            value="featured"
-                            checked={field.value}
-                            onChange={() => form.setValue('featured', true)}
-                            className="h-4 w-4 text-moroccan-blue focus:ring-moroccan-blue border-gray-300"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">Featured</span>
-                        </label>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+      <form onSubmit={handleSubmit} className="p-6 space-y-8">
+        {/* Basic Info */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">About your place</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                What's your place called?
+              </label>
+              <Input
+                value={formData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                placeholder="e.g. Cozy apartment in city center"
+                className="text-base"
               />
             </div>
 
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="mb-6">
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <textarea
-                      rows={4}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-moroccan-blue focus:border-moroccan-blue"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Amenities */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Amenities
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Where is it located?
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {defaultAmenities.map(amenity => (
-                  <label key={amenity} className="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 text-moroccan-blue focus:ring-moroccan-blue border-gray-300 rounded"
-                      checked={selectedAmenities.includes(amenity)}
-                      onChange={() => handleAmenityChange(amenity)}
-                    />
-                    <span className="ml-2 text-sm text-gray-700">{amenity}</span>
-                  </label>
-                ))}
+              <Input
+                value={formData.location}
+                onChange={(e) => handleInputChange('location', e.target.value)}
+                placeholder="e.g. Martil, Morocco"
+                className="text-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Describe your place
+              </label>
+              <Textarea
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                placeholder="What makes your place special?"
+                rows={4}
+                className="text-base"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Property Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Property details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Bedrooms</label>
+                <select
+                  value={formData.bedrooms}
+                  onChange={(e) => handleInputChange('bedrooms', Number(e.target.value))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                >
+                  {[1,2,3,4,5,6].map(num => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Bathrooms</label>
+                <select
+                  value={formData.bathrooms}
+                  onChange={(e) => handleInputChange('bathrooms', Number(e.target.value))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                >
+                  {[1,2,3,4,5].map(num => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Max guests</label>
+                <select
+                  value={formData.capacity}
+                  onChange={(e) => handleInputChange('capacity', Number(e.target.value))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                >
+                  {[1,2,3,4,5,6,7,8,9,10].map(num => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Images - Real image upload functionality */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Property Images
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {images.map((image, index) => (
-                  <div key={index} className="border border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center">
-                    {image ? (
-                      <div className="relative w-full h-32">
-                        <img
-                          src={image}
-                          alt={`Property image ${index + 1}`}
-                          className="h-full w-full object-cover rounded"
-                        />
-                        <button
-                          type="button"
-                          className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-md"
-                          onClick={() => handleRemoveImage(index)}
-                        >
-                          <Trash2 size={14} className="text-red-500" />
-                        </button>
-                      </div>
-                    ) : (
+        {/* Amenities */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">What amenities do you offer?</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3">
+              {popularAmenities.map(amenity => (
+                <label key={amenity} className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedAmenities.includes(amenity)}
+                    onChange={() => handleAmenityToggle(amenity)}
+                    className="h-4 w-4 text-moroccan-blue focus:ring-moroccan-blue border-gray-300 rounded"
+                  />
+                  <span className="text-sm">{amenity}</span>
+                </label>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Photos */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Add some photos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Button
+                type="button"
+                onClick={handleImageUpload}
+                variant="outline"
+                className="w-full h-32 border-dashed"
+              >
+                <div className="text-center">
+                  <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                  <span>Upload photos</span>
+                </div>
+              </Button>
+              
+              {images.length > 0 && (
+                <div className="grid grid-cols-3 gap-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={image}
+                        alt={`Property ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-lg"
+                      />
                       <button
                         type="button"
-                        onClick={() => handleImageUpload(index)}
-                        className="flex flex-col items-center justify-center w-full h-32 focus:outline-none"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
                       >
-                        <Plus className="h-10 w-10 text-gray-300" />
-                        <p className="mt-2 text-xs text-gray-500">Upload Image</p>
+                        <Trash2 size={16} className="text-red-500" />
                       </button>
-                    )}
-                  </div>
-                ))}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="flex justify-end space-x-3 pt-4 border-t">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit"
-                className="bg-moroccan-blue hover:bg-moroccan-blue/90"
-              >
-                {property ? 'Update Property' : 'Add Property'}
-              </Button>
+        {/* Pricing */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Set your price</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center space-x-2">
+              <span className="text-lg">$</span>
+              <Input
+                type="number"
+                value={formData.price}
+                onChange={(e) => handleInputChange('price', e.target.value)}
+                placeholder="100"
+                className="text-lg"
+              />
+              <span className="text-gray-600">per night</span>
             </div>
-          </form>
-        </Form>
-      </div>
+          </CardContent>
+        </Card>
+
+        {/* Submit Buttons */}
+        <div className="flex justify-between pt-6 border-t">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" className="bg-moroccan-blue hover:bg-moroccan-blue/90">
+            {property ? 'Update listing' : 'Publish listing'}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };
