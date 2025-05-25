@@ -18,7 +18,7 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminSettings from "./pages/AdminSettings";
 import AdminSystem from "./pages/AdminSystem";
 import PropertiesPage from "./pages/PropertiesPage";
-import OwnerDashboard from "./pages/OwnerDashboard"; // Import the new page
+import OwnerDashboard from "./pages/OwnerDashboard";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 
@@ -39,7 +39,13 @@ const App = () => (
               <Route path="/property/:id" element={<PropertyPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/about" element={<AboutPage />} />
-              <Route path="/owner-dashboard" element={<OwnerDashboard />} /> {/* Add the new route */}
+              
+              {/* Protected owner dashboard route */}
+              <Route path="/owner-dashboard" element={
+                <AuthCheck requiredRole="owner">
+                  <OwnerDashboard />
+                </AuthCheck>
+              } />
               
               {/* Admin routes with AuthCheck */}
               <Route path="/admin" element={
