@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import PropertyPage from "./pages/PropertyPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
+import BecomeHostPage from "./pages/BecomeHostPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProperties from "./pages/AdminProperties";
 import AdminBookings from "./pages/AdminBookings";
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/property/:id" element={<PropertyPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/become-host" element={<BecomeHostPage />} />
               
               {/* Protected owner dashboard route */}
               <Route path="/owner-dashboard" element={
