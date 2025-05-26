@@ -120,9 +120,7 @@ const AboutPage = () => {
                 <div className="p-6">
                   <h3 className="text-xl font-serif font-medium mb-1">Yahya Amaiche</h3>
                   <p className="text-moroccan-gold mb-4">Developer &  Property Manager</p>
-                  <p className="text-gray-600">
-                    With over 15 years in property management, Youssef ensures that all our properties meet the highest standards of quality and comfort.
-                  </p>
+                  
                 </div>
               </div>
               
