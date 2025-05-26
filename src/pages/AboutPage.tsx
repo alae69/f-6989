@@ -126,10 +126,7 @@ const AboutPage = () => {
               
               {/* Team Member 3 */}
               <div className="bg-white rounded-lg overflow-hidden shadow-md">
-                <div className="h-64 bg-gray-200">
-                  {/* In a real application, this would be a team member photo */}
-                  
-                </div>
+                
                 
               </div>
             </div>
