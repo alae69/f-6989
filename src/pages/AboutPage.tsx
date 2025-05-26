@@ -1,22 +1,15 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
 const AboutPage = () => {
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative h-[400px] flex items-center">
           <div className="absolute inset-0 z-0">
-            <img 
-              src="https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1900&q=80" 
-              alt="Martil Cityscape" 
-              className="w-full h-full object-cover"
-            />
+            <img src="https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1900&q=80" alt="Martil Cityscape" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black bg-opacity-40"></div>
             
             {/* Moroccan Pattern Overlay */}
@@ -109,11 +102,10 @@ const AboutPage = () => {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-serif font-medium mb-1">Amina Benali</h3>
-                  <p className="text-moroccan-gold mb-4">Founder & CEO</p>
+                  <h3 className="text-xl font-serif font-medium mb-1">Alae Belaizi</h3>
+                  <p className="text-moroccan-gold mb-4">Developer & CEO</p>
                   <p className="text-gray-600">
-                    Born and raised in Martil, Amina combines her deep love for her hometown with years of experience in the hospitality industry.
-                  </p>
+                </p>
                 </div>
               </div>
               
@@ -126,8 +118,8 @@ const AboutPage = () => {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-serif font-medium mb-1">Youssef Alami</h3>
-                  <p className="text-moroccan-gold mb-4">Property Manager</p>
+                  <h3 className="text-xl font-serif font-medium mb-1">Yahya Amaiche</h3>
+                  <p className="text-moroccan-gold mb-4">Developer &  Property Manager</p>
                   <p className="text-gray-600">
                     With over 15 years in property management, Youssef ensures that all our properties meet the highest standards of quality and comfort.
                   </p>
@@ -138,9 +130,7 @@ const AboutPage = () => {
               <div className="bg-white rounded-lg overflow-hidden shadow-md">
                 <div className="h-64 bg-gray-200">
                   {/* In a real application, this would be a team member photo */}
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                    <div className="text-gray-500">Team Member Photo</div>
-                  </div>
+                  
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-serif font-medium mb-1">Sofia Martinez</h3>
@@ -213,8 +203,6 @@ const AboutPage = () => {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default AboutPage;
