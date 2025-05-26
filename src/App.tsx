@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BookingsProvider } from "./contexts/BookingsContext";
 import { PropertiesProvider } from "./contexts/PropertiesContext";
+import ScrollToTop from "./components/ScrollToTop";
 import AuthCheck from "./components/AuthCheck";
 import Index from "./pages/Index";
 import PropertyPage from "./pages/PropertyPage";
@@ -32,6 +33,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/" element={<Index />} />
