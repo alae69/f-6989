@@ -130,13 +130,7 @@ const AboutPage = () => {
                   {/* In a real application, this would be a team member photo */}
                   
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-serif font-medium mb-1">Sofia Martinez</h3>
-                  <p className="text-moroccan-gold mb-4">Guest Experience Manager</p>
-                  <p className="text-gray-600">
-                    Sofia's passion for hospitality and cultural exchange helps create memorable experiences for all our guests.
-                  </p>
-                </div>
+                
               </div>
             </div>
           </div>
