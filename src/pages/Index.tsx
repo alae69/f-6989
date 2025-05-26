@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { properties } from '@/data/properties';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -150,9 +151,9 @@ const Index = () => {
             <p className="max-w-2xl mx-auto mb-8 opacity-90">
               Book your dream vacation property today and discover why Martil is one of Morocco's most beloved coastal destinations.
             </p>
-            <button className="btn-secondary">
+            <Link to="/properties" className="btn-secondary">
               Browse All Properties
-            </button>
+            </Link>
           </div>
         </section>
       </main>
