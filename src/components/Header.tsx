@@ -101,9 +101,7 @@ const Header = () => {
                       Logout
                     </Button>
                   </div>
-                </div> : <Button onClick={handleListPropertyClick} className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors">
-                  List Your Property
-                </Button>}
+                </div> : <Button onClick={handleListPropertyClick} className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors">Become a host</Button>}
             </nav>
 
             {/* Mobile menu button */}
