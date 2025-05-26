@@ -125,10 +125,7 @@ const AboutPage = () => {
               </div>
               
               {/* Team Member 3 */}
-              <div className="bg-white rounded-lg overflow-hidden shadow-md">
-                
-                
-              </div>
+              
             </div>
           </div>
         </section>
