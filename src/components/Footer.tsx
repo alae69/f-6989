@@ -82,22 +82,22 @@ const Footer = () => {
             <h3 className="text-lg font-serif mb-6 text-moroccan-gold">Support</h3>
             <ul className="space-y-4">
               <li>
-                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/help-center" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Help Center
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/cancellation-options" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Cancellation Options
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/safety-information" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Safety Information
-                </a>
+                </Link>
               </li>
               <li>
                 <Link to="/privacy-policy" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">

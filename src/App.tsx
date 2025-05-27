@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,6 +25,9 @@ import LoginPage from "./pages/LoginPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import SitemapPage from "./pages/SitemapPage";
+import HelpCenterPage from "./pages/HelpCenterPage";
+import CancellationOptionsPage from "./pages/CancellationOptionsPage";
+import SafetyInformationPage from "./pages/SafetyInformationPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,9 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
               <Route path="/sitemap" element={<SitemapPage />} />
+              <Route path="/help-center" element={<HelpCenterPage />} />
+              <Route path="/cancellation-options" element={<CancellationOptionsPage />} />
+              <Route path="/safety-information" element={<SafetyInformationPage />} />
               
               {/* Protected owner dashboard route */}
               <Route path="/owner-dashboard" element={
