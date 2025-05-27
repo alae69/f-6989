@@ -18,19 +18,19 @@ const Footer = () => {
                 <span className="text-moroccan-gold">Haven</span>
               </div>
             </Link>
-            <p className="text-sm mb-6 leading-relaxed text-[rgb(26_93_145_/_var(--tw-bg-opacity))] font-bold">
+            <p className="text-sm mb-6 leading-relaxed text-[rgb(107_114_128)] font-bold">
               Discover beautiful vacation properties in Martil, Morocco. Experience the perfect blend of Moroccan hospitality and modern luxury on the Mediterranean coast.
             </p>
             <div className="flex space-x-5">
-              <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200">
+              <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200">
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </a>
-              <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200">
+              <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </a>
-              <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200">
+              <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200">
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </a>
@@ -42,31 +42,31 @@ const Footer = () => {
             <h3 className="text-lg font-serif mb-6 text-moroccan-gold">Explore</h3>
             <ul className="space-y-4">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/about" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/properties" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/properties" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Properties
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/contact" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Contact
                 </Link>
               </li>
               <li>
-                <Link to="/owner-dashboard" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/owner-dashboard" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   List Your Property
                 </Link>
@@ -79,25 +79,25 @@ const Footer = () => {
             <h3 className="text-lg font-serif mb-6 text-moroccan-gold">Support</h3>
             <ul className="space-y-4">
               <li>
-                <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Help Center
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Cancellation Options
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Safety Information
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Privacy Policy
                 </a>
@@ -108,7 +108,7 @@ const Footer = () => {
           {/* Contact Information */}
           <div>
             <h3 className="text-lg font-serif mb-6 text-moroccan-gold">Contact Us</h3>
-            <address className="not-italic text-gray-300 space-y-4">
+            <address className="not-italic text-gray-500 space-y-4">
               <p className="flex items-start">
                 <MapPin className="h-5 w-5 mr-3 text-moroccan-gold mt-0.5" />
                 <span>Boulevard Mohammed V<br />Martil, Morocco</span>
