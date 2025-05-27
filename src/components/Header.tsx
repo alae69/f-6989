@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { List, X, User, Mail, Lock } from "lucide-react";
+import { List, X, User, Mail, Lock, ChevronDown } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -127,13 +136,37 @@ const Header = () => {
                   <div className="flex items-center space-x-2">
                     <div className="flex items-center space-x-1">
                       {getLoginMethodIcon()}
-                      
                     </div>
-                    <User className="h-4 w-4 text-gray-600" />
                     
-                    <Button onClick={handleLogout} variant="outline" size="sm" className="text-xs">
-                      Logout
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="flex items-center space-x-1 p-2 hover:bg-gray-100 rounded-lg">
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback className="bg-moroccan-blue text-white text-sm">
+                              {userName.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <ChevronDown className="h-3 w-3 text-gray-600" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem className="flex items-center space-x-2">
+                          <User className="h-4 w-4" />
+                          <div>
+                            <div className="font-medium">{userName}</div>
+                            <div className="text-xs text-gray-500">{getLoginMethodText()}</div>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleListPropertyClick}>
+                          Dashboard
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                          Logout
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div> : <Button onClick={handleListPropertyClick} className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors">
                   Become a host
@@ -166,11 +199,18 @@ const Header = () => {
                       </Button>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <div className="flex items-center space-x-1">
-                            {getLoginMethodIcon()}
-                            
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback className="bg-moroccan-blue text-white text-sm">
+                              {userName.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium text-sm">{userName}</div>
+                            <div className="text-xs text-gray-500 flex items-center space-x-1">
+                              {getLoginMethodIcon()}
+                              <span>{getLoginMethodText()}</span>
+                            </div>
                           </div>
-                          
                         </div>
                         <Button onClick={handleLogout} variant="outline" size="sm">
                           Logout
@@ -189,4 +229,5 @@ const Header = () => {
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onSuccess={handleAuthSuccess} />
     </>;
 };
+
 export default Header;
