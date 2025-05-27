@@ -2,9 +2,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, Facebook, Instagram, Twitter } from 'lucide-react';
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  return <footer className="bg-moroccan-dark text-white pt-16 pb-8">
+  
+  return (
+    <footer className="bg-moroccan-dark text-white pt-16 pb-8">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand Information */}
@@ -97,10 +100,10 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
+                <Link to="/privacy-policy" className="text-gray-500 hover:text-moroccan-gold transition duration-200 flex items-center">
                   <span className="w-1.5 h-1.5 bg-moroccan-gold rounded-full mr-2"></span>
                   Privacy Policy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -128,18 +131,20 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
           <p>&copy; {currentYear} MartilHaven. All rights reserved.</p>
           <div className="mt-3 space-x-6">
-            <a href="#" className="hover:text-moroccan-gold transition duration-200">
+            <Link to="/privacy-policy" className="hover:text-moroccan-gold transition duration-200">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-moroccan-gold transition duration-200">
+            </Link>
+            <Link to="/terms-of-service" className="hover:text-moroccan-gold transition duration-200">
               Terms of Service
-            </a>
-            <a href="#" className="hover:text-moroccan-gold transition duration-200">
+            </Link>
+            <Link to="/sitemap" className="hover:text-moroccan-gold transition duration-200">
               Sitemap
-            </a>
+            </Link>
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
