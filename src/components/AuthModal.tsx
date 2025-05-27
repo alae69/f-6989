@@ -32,9 +32,10 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       localStorage.setItem('userRole', 'owner');
       localStorage.setItem('userName', 'Google User');
       localStorage.setItem('userEmail', 'user@gmail.com');
+      localStorage.setItem('loginMethod', 'google'); // Store login method
       
       toast({
-        title: "Successfully signed in",
+        title: "Successfully signed in with Google",
         description: "Welcome to MartilHaven!",
       });
       
@@ -53,6 +54,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       localStorage.setItem('userRole', 'owner');
       localStorage.setItem('userName', name || 'Property Owner');
       localStorage.setItem('userEmail', email);
+      localStorage.setItem('loginMethod', 'email'); // Store login method
       
       toast({
         title: isSignUp ? "Account created successfully" : "Successfully signed in",

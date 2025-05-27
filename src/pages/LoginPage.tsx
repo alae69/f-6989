@@ -50,6 +50,8 @@ const LoginPage = () => {
         // Admin login
         localStorage.setItem("userRole", "admin");
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userName", "Admin");
+        localStorage.setItem("loginMethod", "credentials"); // Store login method
         toast({
           title: "Admin login successful",
           description: "Welcome back, Admin!",
@@ -59,6 +61,8 @@ const LoginPage = () => {
         // Regular user login
         localStorage.setItem("userRole", "user");
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userName", "User");
+        localStorage.setItem("loginMethod", "credentials"); // Store login method
         toast({
           title: "Login successful",
           description: "Welcome back!",
