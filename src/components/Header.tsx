@@ -127,10 +127,10 @@ const Header = () => {
                   <div className="flex items-center space-x-2">
                     <div className="flex items-center space-x-1">
                       {getLoginMethodIcon()}
-                      <span className="text-xs text-gray-500">{getLoginMethodText()}</span>
+                      
                     </div>
                     <User className="h-4 w-4 text-gray-600" />
-                    <span className="text-sm text-gray-700">{userName}</span>
+                    
                     <Button onClick={handleLogout} variant="outline" size="sm" className="text-xs">
                       Logout
                     </Button>
