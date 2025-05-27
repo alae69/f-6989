@@ -18,7 +18,7 @@ const Footer = () => {
                 <span className="text-moroccan-gold">Haven</span>
               </div>
             </Link>
-            <p className="text-sm mb-6 leading-relaxed text-black-300">
+            <p className="text-sm mb-6 leading-relaxed text-black font-bold">
               Discover beautiful vacation properties in Martil, Morocco. Experience the perfect blend of Moroccan hospitality and modern luxury on the Mediterranean coast.
             </p>
             <div className="flex space-x-5">
