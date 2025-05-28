@@ -24,6 +24,13 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+// Mock user database with roles
+const users = [
+  { username: "admin", password: "password123", role: "admin", name: "Admin User" },
+  { username: "staff", password: "password123", role: "staff", name: "Staff User" },
+  { username: "user", password: "password123", role: "user", name: "Regular User" },
+];
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -40,34 +47,49 @@ const LoginPage = () => {
   const onSubmit = (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // Mock authentication - In a real app, you'd call an API here
+    // Mock authentication - Find user in our mock database
     setTimeout(() => {
       setIsLoading(false);
       
-      // Mock user authentication - For demo only
-      // In real application, this would be handled through API and tokens
-      if (data.username === "admin" && data.password === "password123") {
-        // Admin login
-        localStorage.setItem("userRole", "admin");
+      const user = users.find(u => u.username === data.username && u.password === data.password);
+      
+      if (user) {
+        // Store user authentication data
+        localStorage.setItem("userRole", user.role);
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userName", "Admin");
-        localStorage.setItem("loginMethod", "credentials"); // Store login method
-        toast({
-          title: "Admin login successful",
-          description: "Welcome back, Admin!",
-        });
-        navigate("/admin");
-      } else if (data.username === "user" && data.password === "password123") {
-        // Regular user login
-        localStorage.setItem("userRole", "user");
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userName", "User");
-        localStorage.setItem("loginMethod", "credentials"); // Store login method
-        toast({
-          title: "Login successful",
-          description: "Welcome back!",
-        });
-        navigate("/");
+        localStorage.setItem("userName", user.name);
+        localStorage.setItem("loginMethod", "credentials");
+        
+        // Role-based navigation
+        switch (user.role) {
+          case "admin":
+            toast({
+              title: "Admin login successful",
+              description: `Welcome back, ${user.name}!`,
+            });
+            navigate("/admin");
+            break;
+          case "staff":
+            toast({
+              title: "Staff login successful",
+              description: `Welcome back, ${user.name}!`,
+            });
+            navigate("/staff");
+            break;
+          case "user":
+            toast({
+              title: "Login successful",
+              description: `Welcome back, ${user.name}!`,
+            });
+            navigate("/");
+            break;
+          default:
+            toast({
+              title: "Login successful",
+              description: `Welcome back, ${user.name}!`,
+            });
+            navigate("/");
+        }
       } else {
         // Invalid credentials
         toast({
@@ -138,9 +160,10 @@ const LoginPage = () => {
         
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            For demo purposes:<br />
-            Admin: admin / password123<br />
-            User: user / password123
+            Demo credentials:<br />
+            <span className="font-medium">Admin:</span> admin / password123<br />
+            <span className="font-medium">Staff:</span> staff / password123<br />
+            <span className="font-medium">User:</span> user / password123
           </p>
         </div>
       </div>
