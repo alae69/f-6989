@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { List, X, User, Mail, Lock, ChevronDown } from "lucide-react";
+import { List, X, User, Mail, Lock, ChevronDown, LogOut } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -121,7 +121,7 @@ const Header = () => {
             }) => `text-sm font-medium transition-colors hover:text-moroccan-blue ${isActive ? "text-moroccan-blue" : "text-gray-700"}`}>
                   {link.name}
                 </NavLink>)}
-              
+
               {isLoggedIn ? <div className="flex items-center space-x-3">
                   <Button onClick={handleListPropertyClick} className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors">
                     Dashboard
@@ -130,7 +130,7 @@ const Header = () => {
                     <div className="flex items-center space-x-1">
                       {getLoginMethodIcon()}
                     </div>
-                    
+
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="flex items-center space-x-1 p-2 hover:bg-gray-100 rounded-lg">
@@ -205,9 +205,15 @@ const Header = () => {
                             </div>
                           </div>
                         </div>
-                        <Button onClick={handleLogout} variant="outline" size="sm">
-                          Logout
-                        </Button>
+                        <Button 
+                onClick={handleLogout}
+                variant="outline" 
+                size="sm" 
+                className="flex items-center space-x-1 lg:space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50 px-2 lg:px-3"
+              >
+                <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
+                <span className="hidden sm:inline text-xs lg:text-sm">Logout</span>
+              </Button>
                       </div>
                     </div> : <Button onClick={handleListPropertyClick} className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white">
                       Become a host
