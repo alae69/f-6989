@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Building, LogOut } from 'lucide-react';
@@ -64,20 +63,29 @@ const StaffLayout: React.FC<StaffLayoutProps> = ({
             <p className="text-xs uppercase font-medium text-gray-500">Staff Portal</p>
           </div>
           <nav className="space-y-1">
-            {sidebarItems.map((item) => (
               <Link
-                key={item.name}
-                to={item.path}
-                className={`flex items-center px-4 py-3 ${
-                  item.path === currentPath
-                    ? 'bg-moroccan-blue/10 text-moroccan-blue border-r-4 border-moroccan-blue'
-                    : 'text-gray-700 hover:bg-gray-50'
+                to="/staff"
+                className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  currentPath === '/staff'
+                    ? 'bg-moroccan-blue text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
-                <item.icon size={18} className="mr-3" />
-                <span>{item.name}</span>
+                <Building className="mr-3 h-4 w-4" />
+                Dashboard
               </Link>
-            ))}
+
+              <Link
+                to="/staff/properties"
+                className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  currentPath === '/staff/properties'
+                    ? 'bg-moroccan-blue text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Building className="mr-3 h-4 w-4" />
+                Property Management
+              </Link>
           </nav>
         </div>
       </div>
