@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Property } from '@/data/properties';
 import { useToast } from '@/hooks/use-toast';
@@ -16,7 +15,7 @@ interface PropertyFormProps {
 
 const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCancel }) => {
   const { toast } = useToast();
-  
+
   // Simple form state
   const [formData, setFormData] = useState({
     title: property?.title || '',
@@ -27,20 +26,98 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
     bathrooms: property?.bathrooms || 1,
     capacity: property?.capacity || 2,
   });
-  
+
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>(
     property?.amenities || []
   );
-  
+
   const [images, setImages] = useState<string[]>(
     property?.images || []
   );
+  const [selectedCity, setSelectedCity] = useState<string>('');
+  const [selectedPlace, setSelectedPlace] = useState<string>('');
 
   // Simple amenities list
   const popularAmenities = [
     'WiFi', 'Kitchen', 'Air conditioning', 'Heating', 'TV',
     'Pool', 'Parking', 'Garden', 'Balcony', 'Pet friendly'
   ];
+
+    // City and places data
+    const cityPlaces = {
+      'Martil': [
+        'Martil Beach',
+        'Martil Center',
+        'Cabo Negro',
+        'Marina Smir',
+        'Restinga Beach',
+        'Martil Port Area',
+        'Palm Resort Area',
+        'Saidia Road',
+        'Downtown Martil',
+        'Beachfront Promenade'
+      ],
+      'Tetouan': [
+        'Medina of Tetouan',
+        'Ensanche',
+        'Sania Ramel',
+        'M\'diq Road',
+        'University Area',
+        'Hassan II Avenue',
+        'Dersa',
+        'Zitoune',
+        'Mallaliene',
+        'Industrial Zone'
+      ],
+      'Tangier': [
+        'Medina of Tangier',
+        'Ville Nouvelle',
+        'Malabata',
+        'Boulevard Pasteur',
+        'Kasbah',
+        'Ibn Batouta Airport Area',
+        'Tangier Bay',
+        'California',
+        'Boukhalef',
+        'City Center'
+      ],
+      'Chefchaouen': [
+        'Blue Pearl Medina',
+        'Spanish Mosque Area',
+        'Ras El Ma',
+        'Plaza Uta el-Hammam',
+        'Kasbah Museum Area',
+        'Atlas Mountains View',
+        'Traditional Quarters',
+        'Mountain Slopes',
+        'Valley View',
+        'Historic Center'
+      ],
+      'Casablanca': [
+        'Hassan II Mosque Area',
+        'Corniche',
+        'City Center',
+        'Maarif',
+        'Anfa',
+        'Old Medina',
+        'Twin Center',
+        'Racine',
+        'Bourgogne',
+        'Sidi Belyout'
+      ],
+      'Rabat': [
+        'Medina of Rabat',
+        'Hassan Tower Area',
+        'Agdal',
+        'Souissi',
+        'Hay Riad',
+        'Kasbah of the Udayas',
+        'Ville Nouvelle',
+        'Temara Beach',
+        'Aviation',
+        'Orangeraie'
+      ]
+    };
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -54,12 +131,35 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
     );
   };
 
+  const handleCityChange = (city: string) => {
+    setSelectedCity(city);
+    setSelectedPlace(''); // Reset place when city changes
+
+    // Update location in form data
+    if (city) {
+      handleInputChange('location', `${city}, Morocco`);
+    } else {
+      handleInputChange('location', '');
+    }
+  };
+
+  const handlePlaceChange = (place: string) => {
+    setSelectedPlace(place);
+
+    // Update location in form data with full address
+    if (place && selectedCity) {
+      handleInputChange('location', `${place}, ${selectedCity}, Morocco`);
+    } else if (selectedCity) {
+      handleInputChange('location', `${selectedCity}, Morocco`);
+    }
+  };
+
   const handleImageUpload = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.multiple = true;
-    
+
     fileInput.addEventListener('change', (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.files) {
@@ -77,7 +177,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
         });
       }
     });
-    
+
     fileInput.click();
   };
 
@@ -87,12 +187,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Simple validation
-    if (!formData.title || !formData.location || !formData.price) {
+    if (!formData.title || !formData.description || !selectedCity || !selectedPlace || !formData.price) {
       toast({
         title: "Missing information",
-        description: "Please fill in the title, location, and price.",
+        description: "Please fill in the title, description, city, place and price.",
         variant: "destructive",
       });
       return;
@@ -151,15 +251,37 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Where is it located?
+                The city
               </label>
-              <Input
-                value={formData.location}
-                onChange={(e) => handleInputChange('location', e.target.value)}
-                placeholder="e.g. Martil, Morocco"
-                className="text-base"
-              />
+              <select
+                value={selectedCity}
+                onChange={(e) => handleCityChange(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+              >
+                <option value="">Select a city</option>
+                {Object.keys(cityPlaces).map(city => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
             </div>
+
+            {selectedCity && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Choose your place
+                </label>
+                <select
+                  value={selectedPlace}
+                  onChange={(e) => handlePlaceChange(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                >
+                  <option value="">Select a place</option>
+                  {cityPlaces[selectedCity].map(place => (
+                    <option key={place} value={place}>{place}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium mb-2">
@@ -195,7 +317,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
                   ))}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Bathrooms</label>
                 <select
@@ -208,7 +330,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
                   ))}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Max guests</label>
                 <select
@@ -265,7 +387,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
                   <span>Upload photos</span>
                 </div>
               </Button>
-              
+
               {images.length > 0 && (
                 <div className="grid grid-cols-3 gap-4">
                   {images.map((image, index) => (
