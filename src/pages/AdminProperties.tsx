@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
+import PropertyForm from '@/components/PropertyForm';
 import { useProperties } from '@/contexts/PropertiesContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,13 +9,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, X, Eye } from 'lucide-react';
+import { Check, X, Eye, Plus, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AdminProperties = () => {
-  const { properties, updateProperty } = useProperties();
+  const { properties, updateProperty, addProperty } = useProperties();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddingProperty, setIsAddingProperty] = useState(false);
+  const [editingProperty, setEditingProperty] = useState(null);
   
   // Filter properties based on search term
   const filteredProperties = properties.filter(property => 
@@ -44,25 +47,99 @@ const AdminProperties = () => {
     });
   };
 
+  const handleAddProperty = (propertyData: any) => {
+    const newProperty = {
+      ...propertyData,
+      id: Date.now().toString(),
+      status: 'approved', // Admin-created properties are auto-approved
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      ownerId: 'admin',
+      rating: 0,
+      reviews: 0
+    };
+    
+    addProperty(newProperty);
+    setIsAddingProperty(false);
+    toast({
+      title: "Property added",
+      description: "New property has been created successfully.",
+    });
+  };
+
+  const handleUpdateProperty = (propertyData: any) => {
+    if (editingProperty) {
+      updateProperty(editingProperty.id, {
+        ...propertyData,
+        updatedAt: new Date().toISOString()
+      });
+      setEditingProperty(null);
+      toast({
+        title: "Property updated",
+        description: "Property has been updated successfully.",
+      });
+    }
+  };
+
+  // Render property form if adding or editing
+  if (isAddingProperty || editingProperty) {
+    return (
+      <AdminLayout title={editingProperty ? "Edit Property" : "Add New Property"}>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsAddingProperty(false);
+                setEditingProperty(null);
+              }}
+            >
+              ← Back to Properties
+            </Button>
+          </div>
+          
+          <PropertyForm
+            property={editingProperty || undefined}
+            onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty}
+            onCancel={() => {
+              setIsAddingProperty(false);
+              setEditingProperty(null);
+            }}
+          />
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout title="Property Management">
       <div className="space-y-6">
-        {/* Search and filter controls */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <div className="w-full sm:max-w-sm">
-            <Input
-              placeholder="Search properties..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
-            />
+        {/* Header with Add Property button */}
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <div className="w-full sm:max-w-sm">
+              <Input
+                placeholder="Search properties..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox id="featured" />
+              <label htmlFor="featured" className="text-sm font-medium">
+                Featured only
+              </label>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox id="featured" />
-            <label htmlFor="featured" className="text-sm font-medium">
-              Featured only
-            </label>
-          </div>
+          
+          <Button 
+            onClick={() => setIsAddingProperty(true)}
+            className="bg-moroccan-blue hover:bg-moroccan-blue/90"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Property
+          </Button>
         </div>
         
         {/* Properties organized by tabs */}
@@ -217,6 +294,14 @@ const AdminProperties = () => {
                                 <Eye className="mr-1 h-4 w-4" />
                                 View
                               </Link>
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => setEditingProperty(property)}
+                            >
+                              <Edit className="mr-1 h-4 w-4" />
+                              Edit
                             </Button>
                             <Button 
                               variant="outline" 
