@@ -1,5 +1,5 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { bookingsApi } from "@/lib/api";
 
 export interface Booking {
   id: string;
@@ -19,7 +19,7 @@ export interface Booking {
 
 interface BookingsContextType {
   bookings: Booking[];
-  addBooking: (booking: Omit<Booking, 'id' | 'status' | 'createdAt'>) => void;
+  addBooking: (booking: Omit<Booking, 'id' | 'status' | 'createdAt'>) => Promise<Booking>;
   updateBookingStatus: (id: string, status: Booking['status']) => void;
   getBookingById: (id: string) => Booking | undefined;
   loading: boolean;
@@ -39,31 +39,30 @@ export const BookingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load bookings from localStorage on initial render
   useEffect(() => {
-    const savedBookings = localStorage.getItem('martilhaven_bookings');
-    if (savedBookings) {
-      setBookings(JSON.parse(savedBookings));
-    }
-    setLoading(false);
+    const fetchBookings = async () => {
+      try {
+        const data = await bookingsApi.getAll();
+        setBookings(data);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
   }, []);
 
-  // Save bookings to localStorage whenever they change
-  useEffect(() => {
-    if (!loading) {
-      localStorage.setItem('martilhaven_bookings', JSON.stringify(bookings));
+  const addBooking = async (booking: Omit<Booking, 'id' | 'status' | 'createdAt'>) => {
+    try {
+      const newBooking = await bookingsApi.create(booking);
+      setBookings(prev => [...prev, newBooking]);
+      return newBooking;
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      throw error;
     }
-  }, [bookings, loading]);
-
-  const addBooking = (newBooking: Omit<Booking, 'id' | 'status' | 'createdAt'>) => {
-    const booking: Booking = {
-      ...newBooking,
-      id: `BK${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
-    
-    setBookings(prevBookings => [...prevBookings, booking]);
   };
 
   const updateBookingStatus = (id: string, status: Booking['status']) => {
