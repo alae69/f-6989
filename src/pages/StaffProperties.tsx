@@ -1,14 +1,14 @@
+
 import React, { useState } from 'react';
 import StaffLayout from '@/components/StaffLayout';
 import PropertyForm from '@/components/PropertyForm';
 import { useProperties } from '@/contexts/PropertiesContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, X, Eye, Plus, Edit } from 'lucide-react';
+import { Check, X, Eye, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const StaffProperties = () => {
@@ -50,7 +50,7 @@ const StaffProperties = () => {
     const newProperty = {
       ...propertyData,
       id: Date.now().toString(),
-      status: 'pending', // Staff-created properties need approval
+      status: 'pending',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       ownerId: 'staff',
@@ -133,9 +133,8 @@ const StaffProperties = () => {
           </Button>
         </div>
 
-        {/* Properties organized by tabs - same content as AdminProperties but with StaffLayout */}
+        {/* Properties organized by tabs */}
         <Tabs defaultValue="pending">
-          {/* ... keep existing code (tabs structure from AdminProperties) */}
           <TabsList className="mb-6">
             <TabsTrigger value="pending">
               Pending Review
@@ -243,9 +242,8 @@ const StaffProperties = () => {
             )}
           </TabsContent>
 
-          {/* Other tabs with similar structure as AdminProperties */}
+          {/* Approved properties tab */}
           <TabsContent value="approved">
-            {/* ... keep existing code (approved properties structure) */}
             <h2 className="text-lg font-medium mb-4">Approved Properties</h2>
             {approvedProperties.length > 0 ? (
               <div className="space-y-4">
@@ -324,8 +322,8 @@ const StaffProperties = () => {
             )}
           </TabsContent>
 
+          {/* Rejected properties tab */}
           <TabsContent value="rejected">
-            {/* ... keep existing code (rejected properties structure) */}
             <h2 className="text-lg font-medium mb-4">Rejected Properties</h2>
             {rejectedProperties.length > 0 ? (
               <div className="space-y-4">
@@ -408,8 +406,8 @@ const StaffProperties = () => {
             )}
           </TabsContent>
 
+          {/* All properties tab */}
           <TabsContent value="all">
-            {/* ... keep existing code (all properties structure) */}
             <h2 className="text-lg font-medium mb-4">All Properties ({filteredProperties.length})</h2>
             {filteredProperties.length > 0 ? (
               <div className="space-y-4">
@@ -476,24 +474,25 @@ const StaffProperties = () => {
                               </Button>
                             )}
                             {property.status !== 'rejected' && (
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
-                                onClick={() => updateProperty(property.id, { featured: !property.featured })}
-                              >
-                                {property.featured ? "Unfeature" : "Feature"}
-                              </Button>
-                            
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                className="text-red-600 border-red-600 hover:bg-red-50"
-                                onClick={() => handleRejectProperty(property.id)}
-                              >
-                                <X className="mr-1 h-4 w-4" />
-                                Reject
-                              </Button>
+                              <>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
+                                  onClick={() => updateProperty(property.id, { featured: !property.featured })}
+                                >
+                                  {property.featured ? "Unfeature" : "Feature"}
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className="text-red-600 border-red-600 hover:bg-red-50"
+                                  onClick={() => handleRejectProperty(property.id)}
+                                >
+                                  <X className="mr-1 h-4 w-4" />
+                                  Reject
+                                </Button>
+                              </>
                             )}
                           </div>
                         </div>
