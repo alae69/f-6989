@@ -25,6 +25,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
     bedrooms: property?.bedrooms || 1,
     bathrooms: property?.bathrooms || 1,
     capacity: property?.capacity || 2,
+    featured: property?.featured || false, // Added featured property state
   });
 
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>(
@@ -213,7 +214,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
       priceUnit: 'night',
       amenities: selectedAmenities,
       images: images,
-      featured: false,
+      featured: formData.featured, // Included featured property data
     };
 
     onSubmit(propertyData);
@@ -295,6 +296,21 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
                 className="text-base"
               />
             </div>
+
+             {/* Featured Property Toggle */}
+             <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="featured"
+                checked={formData.featured || false}
+                onChange={(e) => handleInputChange('featured', e.target.checked)}
+                className="w-4 h-4 text-moroccan-blue bg-gray-100 border-gray-300 rounded focus:ring-moroccan-blue focus:ring-2"
+              />
+              <label htmlFor="featured" className="text-sm font-medium">
+                Featured Property
+              </label>
+            </div>
+
           </CardContent>
         </Card>
 

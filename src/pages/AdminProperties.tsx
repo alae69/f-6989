@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
 import PropertyForm from '@/components/PropertyForm';
@@ -18,19 +17,19 @@ const AdminProperties = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddingProperty, setIsAddingProperty] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
-  
+
   // Filter properties based on search term
   const filteredProperties = properties.filter(property => 
     property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     property.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
     property.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   // Group properties by status
   const pendingProperties = filteredProperties.filter(p => p.status === 'pending');
   const approvedProperties = filteredProperties.filter(p => p.status === 'approved');
   const rejectedProperties = filteredProperties.filter(p => p.status === 'rejected');
-  
+
   const handleApproveProperty = (id: string) => {
     updateProperty(id, { status: 'approved' });
     toast({
@@ -38,7 +37,7 @@ const AdminProperties = () => {
       description: "The property listing has been published.",
     });
   };
-  
+
   const handleRejectProperty = (id: string) => {
     updateProperty(id, { status: 'rejected' });
     toast({
@@ -58,7 +57,7 @@ const AdminProperties = () => {
       rating: 0,
       reviews: 0
     };
-    
+
     addProperty(newProperty);
     setIsAddingProperty(false);
     toast({
@@ -97,7 +96,7 @@ const AdminProperties = () => {
               ← Back to Properties
             </Button>
           </div>
-          
+
           <PropertyForm
             property={editingProperty || undefined}
             onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty}
@@ -132,7 +131,7 @@ const AdminProperties = () => {
               </label>
             </div>
           </div>
-          
+
           <Button 
             onClick={() => setIsAddingProperty(true)}
             className="bg-moroccan-blue hover:bg-moroccan-blue/90"
@@ -141,7 +140,7 @@ const AdminProperties = () => {
             Add New Property
           </Button>
         </div>
-        
+
         {/* Properties organized by tabs */}
         <Tabs defaultValue="pending">
           <TabsList className="mb-6">
@@ -157,7 +156,7 @@ const AdminProperties = () => {
             <TabsTrigger value="rejected">Rejected</TabsTrigger>
             <TabsTrigger value="all">All Properties</TabsTrigger>
           </TabsList>
-          
+
           {/* Pending properties tab */}
           <TabsContent value="pending">
             <h2 className="text-lg font-medium mb-4">Properties Pending Review</h2>
@@ -185,17 +184,17 @@ const AdminProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="mb-3">
                           <p className="text-sm line-clamp-2">{property.description}</p>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">${property.price}/{property.priceUnit}</span>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             Submitted: {property.createdAt ? new Date(property.createdAt).toLocaleDateString() : 'Unknown'}
@@ -242,7 +241,7 @@ const AdminProperties = () => {
               </div>
             )}
           </TabsContent>
-          
+
           {/* Approved properties tab */}
           <TabsContent value="approved">
             <h2 className="text-lg font-medium mb-4">Approved Properties</h2>
@@ -270,7 +269,7 @@ const AdminProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
@@ -279,7 +278,7 @@ const AdminProperties = () => {
                             <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Featured</span>
                           )}
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             Approved: {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString() : 'Unknown'}
@@ -325,7 +324,7 @@ const AdminProperties = () => {
               </div>
             )}
           </TabsContent>
-          
+
           {/* Rejected properties tab */}
           <TabsContent value="rejected">
             <h2 className="text-lg font-medium mb-4">Rejected Properties</h2>
@@ -353,17 +352,17 @@ const AdminProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="mb-3">
                           <p className="text-sm line-clamp-2">{property.description}</p>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">${property.price}/{property.priceUnit}</span>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             Rejected: {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString() : 'Unknown'}
@@ -388,6 +387,14 @@ const AdminProperties = () => {
                               <Check className="mr-1 h-4 w-4" />
                               Approve
                             </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
+                              onClick={() => updateProperty(property.id, { featured: !property.featured })}
+                            >
+                              {property.featured ? "Unfeature" : "Feature"}
+                            </Button>
                           </div>
                         </div>
                       </CardContent>
@@ -401,7 +408,7 @@ const AdminProperties = () => {
               </div>
             )}
           </TabsContent>
-          
+
           {/* All properties tab */}
           <TabsContent value="all">
             <h2 className="text-lg font-medium mb-4">All Properties ({filteredProperties.length})</h2>
@@ -436,7 +443,7 @@ const AdminProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
@@ -445,7 +452,7 @@ const AdminProperties = () => {
                             <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Featured</span>
                           )}
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             {property.createdAt ? new Date(property.createdAt).toLocaleDateString() : 'Unknown'}

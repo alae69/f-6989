@@ -17,19 +17,19 @@ const StaffProperties = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddingProperty, setIsAddingProperty] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
-  
+
   // Filter properties based on search term
   const filteredProperties = properties.filter(property => 
     property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     property.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
     property.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   // Group properties by status
   const pendingProperties = filteredProperties.filter(p => p.status === 'pending');
   const approvedProperties = filteredProperties.filter(p => p.status === 'approved');
   const rejectedProperties = filteredProperties.filter(p => p.status === 'rejected');
-  
+
   const handleApproveProperty = (id: string) => {
     updateProperty(id, { status: 'approved' });
     toast({
@@ -37,7 +37,7 @@ const StaffProperties = () => {
       description: "The property listing has been published.",
     });
   };
-  
+
   const handleRejectProperty = (id: string) => {
     updateProperty(id, { status: 'rejected' });
     toast({
@@ -57,7 +57,7 @@ const StaffProperties = () => {
       rating: 0,
       reviews: 0
     };
-    
+
     addProperty(newProperty);
     setIsAddingProperty(false);
     toast({
@@ -96,7 +96,7 @@ const StaffProperties = () => {
               ← Back to Properties
             </Button>
           </div>
-          
+
           <PropertyForm
             property={editingProperty || undefined}
             onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty}
@@ -123,7 +123,7 @@ const StaffProperties = () => {
               className="w-full"
             />
           </div>
-          
+
           <Button 
             onClick={() => setIsAddingProperty(true)}
             className="bg-moroccan-blue hover:bg-moroccan-blue/90"
@@ -132,7 +132,7 @@ const StaffProperties = () => {
             Add New Property
           </Button>
         </div>
-        
+
         {/* Properties organized by tabs - same content as AdminProperties but with StaffLayout */}
         <Tabs defaultValue="pending">
           {/* ... keep existing code (tabs structure from AdminProperties) */}
@@ -149,7 +149,7 @@ const StaffProperties = () => {
             <TabsTrigger value="rejected">Rejected</TabsTrigger>
             <TabsTrigger value="all">All Properties</TabsTrigger>
           </TabsList>
-          
+
           {/* Pending properties tab */}
           <TabsContent value="pending">
             <h2 className="text-lg font-medium mb-4">Properties Pending Review</h2>
@@ -177,17 +177,17 @@ const StaffProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="mb-3">
                           <p className="text-sm line-clamp-2">{property.description}</p>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">${property.price}/{property.priceUnit}</span>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             Submitted: {property.createdAt ? new Date(property.createdAt).toLocaleDateString() : 'Unknown'}
@@ -215,6 +215,14 @@ const StaffProperties = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
+                              className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
+                              onClick={() => updateProperty(property.id, { featured: !property.featured })}
+                            >
+                              {property.featured ? "Unfeature" : "Feature"}
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
                               className="text-red-600 border-red-600 hover:bg-red-50"
                               onClick={() => handleRejectProperty(property.id)}
                             >
@@ -234,7 +242,7 @@ const StaffProperties = () => {
               </div>
             )}
           </TabsContent>
-          
+
           {/* Other tabs with similar structure as AdminProperties */}
           <TabsContent value="approved">
             {/* ... keep existing code (approved properties structure) */}
@@ -263,13 +271,13 @@ const StaffProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">${property.price}/{property.priceUnit}</span>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             Approved: {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString() : 'Unknown'}
@@ -284,6 +292,14 @@ const StaffProperties = () => {
                                 <Eye className="mr-1 h-4 w-4" />
                                 View
                               </Link>
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
+                              onClick={() => updateProperty(property.id, { featured: !property.featured })}
+                            >
+                              {property.featured ? "Unfeature" : "Feature"}
                             </Button>
                             <Button 
                               variant="outline" 
@@ -307,7 +323,7 @@ const StaffProperties = () => {
               </div>
             )}
           </TabsContent>
-          
+
           <TabsContent value="rejected">
             {/* ... keep existing code (rejected properties structure) */}
             <h2 className="text-lg font-medium mb-4">Rejected Properties</h2>
@@ -335,17 +351,17 @@ const StaffProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="mb-3">
                           <p className="text-sm line-clamp-2">{property.description}</p>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">${property.price}/{property.priceUnit}</span>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             Rejected: {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString() : 'Unknown'}
@@ -370,6 +386,14 @@ const StaffProperties = () => {
                               <Check className="mr-1 h-4 w-4" />
                               Approve
                             </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
+                              onClick={() => updateProperty(property.id, { featured: !property.featured })}
+                            >
+                              {property.featured ? "Unfeature" : "Feature"}
+                            </Button>
                           </div>
                         </div>
                       </CardContent>
@@ -383,7 +407,7 @@ const StaffProperties = () => {
               </div>
             )}
           </TabsContent>
-          
+
           <TabsContent value="all">
             {/* ... keep existing code (all properties structure) */}
             <h2 className="text-lg font-medium mb-4">All Properties ({filteredProperties.length})</h2>
@@ -418,13 +442,13 @@ const StaffProperties = () => {
                             ID: {property.id}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4 text-xs">
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} bedrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} bathrooms</span>
                           <span className="px-2 py-1 bg-gray-100 rounded-full">${property.price}/{property.priceUnit}</span>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="text-xs text-gray-500">
                             {property.createdAt ? new Date(property.createdAt).toLocaleDateString() : 'Unknown'}
@@ -452,6 +476,15 @@ const StaffProperties = () => {
                               </Button>
                             )}
                             {property.status !== 'rejected' && (
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className={property.featured ? "text-yellow-600 border-yellow-600 hover:bg-yellow-50" : "text-blue-600 border-blue-600 hover:bg-blue-50"}
+                                onClick={() => updateProperty(property.id, { featured: !property.featured })}
+                              >
+                                {property.featured ? "Unfeature" : "Feature"}
+                              </Button>
+                            
                               <Button 
                                 variant="outline" 
                                 size="sm"
