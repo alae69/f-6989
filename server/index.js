@@ -20,18 +20,29 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
+// Database connection status
+let isDatabaseConnected = false;
+
 // Test database connection
 pool.connect((err, client, release) => {
   if (err) {
     console.error('Error connecting to database:', err);
+    console.log('Running in fallback mode without database');
+    isDatabaseConnected = false;
   } else {
     console.log('Connected to PostgreSQL database');
+    isDatabaseConnected = true;
     release();
   }
 });
 
 // Initialize database tables
 async function initializeDatabase() {
+  if (!isDatabaseConnected) {
+    console.log('Skipping database initialization - no connection');
+    return;
+  }
+  
   try {
     // Create properties table
     await pool.query(`
@@ -41,10 +52,13 @@ async function initializeDatabase() {
         description TEXT,
         price DECIMAL(10,2) NOT NULL,
         location VARCHAR(255) NOT NULL,
+        city VARCHAR(255),
         bedrooms INTEGER,
         bathrooms INTEGER,
         image_url TEXT,
         amenities TEXT[],
+        status VARCHAR(50) DEFAULT 'approved',
+        featured BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -80,27 +94,76 @@ async function initializeDatabase() {
     console.log('Database tables initialized');
   } catch (error) {
     console.error('Error initializing database:', error);
+    isDatabaseConnected = false;
   }
 }
 
 initializeDatabase();
+
+// Fallback data when database is not available
+const fallbackProperties = [
+  {
+    id: 1,
+    title: "Villa Azure Vista",
+    description: "Luxurious villa with stunning ocean views",
+    price: 250,
+    location: "Martil Beach",
+    city: "Martil",
+    bedrooms: 4,
+    bathrooms: 3,
+    image_url: "/placeholder.svg",
+    amenities: ["WiFi", "Pool", "Kitchen", "Parking"],
+    status: "approved",
+    featured: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 2,
+    title: "Coastal Retreat",
+    description: "Modern apartment near the beach",
+    price: 150,
+    location: "Marina District",
+    city: "Martil",
+    bedrooms: 2,
+    bathrooms: 2,
+    image_url: "/placeholder.svg",
+    amenities: ["WiFi", "Air Conditioning", "Kitchen"],
+    status: "approved",
+    featured: true,
+    created_at: new Date().toISOString()
+  }
+];
+
+const fallbackBookings = [];
 
 // API Routes
 
 // Properties routes
 app.get('/api/properties', async (req, res) => {
   try {
+    if (!isDatabaseConnected) {
+      return res.json(fallbackProperties);
+    }
     const result = await pool.query('SELECT * FROM properties ORDER BY created_at DESC');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching properties:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json(fallbackProperties);
   }
 });
 
 app.get('/api/properties/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    
+    if (!isDatabaseConnected) {
+      const property = fallbackProperties.find(p => p.id == id);
+      if (!property) {
+        return res.status(404).json({ error: 'Property not found' });
+      }
+      return res.json(property);
+    }
+    
     const result = await pool.query('SELECT * FROM properties WHERE id = $1', [id]);
     
     if (result.rows.length === 0) {
@@ -110,17 +173,34 @@ app.get('/api/properties/:id', async (req, res) => {
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Error fetching property:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    const property = fallbackProperties.find(p => p.id == req.params.id);
+    if (property) {
+      res.json(property);
+    } else {
+      res.status(404).json({ error: 'Property not found' });
+    }
   }
 });
 
 app.post('/api/properties', async (req, res) => {
   try {
-    const { title, description, price, location, bedrooms, bathrooms, image_url, amenities } = req.body;
+    if (!isDatabaseConnected) {
+      const newProperty = {
+        id: fallbackProperties.length + 1,
+        ...req.body,
+        created_at: new Date().toISOString(),
+        status: 'approved',
+        featured: req.body.featured || false
+      };
+      fallbackProperties.push(newProperty);
+      return res.status(201).json(newProperty);
+    }
+    
+    const { title, description, price, location, city, bedrooms, bathrooms, image_url, amenities, featured, status } = req.body;
     
     const result = await pool.query(
-      'INSERT INTO properties (title, description, price, location, bedrooms, bathrooms, image_url, amenities) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [title, description, price, location, bedrooms, bathrooms, image_url, amenities]
+      'INSERT INTO properties (title, description, price, location, city, bedrooms, bathrooms, image_url, amenities, featured, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+      [title, description, price, location, city, bedrooms, bathrooms, image_url, amenities, featured || false, status || 'approved']
     );
     
     res.status(201).json(result.rows[0]);
@@ -133,6 +213,10 @@ app.post('/api/properties', async (req, res) => {
 // Bookings routes
 app.get('/api/bookings', async (req, res) => {
   try {
+    if (!isDatabaseConnected) {
+      return res.json(fallbackBookings);
+    }
+    
     const result = await pool.query(`
       SELECT b.*, p.title as property_title 
       FROM bookings b 
@@ -142,12 +226,23 @@ app.get('/api/bookings', async (req, res) => {
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching bookings:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json(fallbackBookings);
   }
 });
 
 app.post('/api/bookings', async (req, res) => {
   try {
+    if (!isDatabaseConnected) {
+      const newBooking = {
+        id: fallbackBookings.length + 1,
+        ...req.body,
+        created_at: new Date().toISOString(),
+        status: 'pending'
+      };
+      fallbackBookings.push(newBooking);
+      return res.status(201).json(newBooking);
+    }
+    
     const { property_id, guest_name, guest_email, check_in, check_out, guests, total_price } = req.body;
     
     const result = await pool.query(
@@ -163,18 +258,36 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 // Users routes
+const fallbackUsers = [];
+
 app.get('/api/users', async (req, res) => {
   try {
+    if (!isDatabaseConnected) {
+      return res.json(fallbackUsers);
+    }
+    
     const result = await pool.query('SELECT id, email, role, name, created_at FROM users ORDER BY created_at DESC');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json(fallbackUsers);
   }
 });
 
 app.post('/api/users', async (req, res) => {
   try {
+    if (!isDatabaseConnected) {
+      const newUser = {
+        id: fallbackUsers.length + 1,
+        email: req.body.email,
+        role: req.body.role,
+        name: req.body.name,
+        created_at: new Date().toISOString()
+      };
+      fallbackUsers.push(newUser);
+      return res.status(201).json(newUser);
+    }
+    
     const { email, password, role, name } = req.body;
     
     const result = await pool.query(
