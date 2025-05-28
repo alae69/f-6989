@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Building, Settings, Cog, Database } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Building, Settings, Cog, Database, LogOut } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
   title, 
   currentPath = '/admin' 
 }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('loginMethod');
+    navigate('/');
+  };
+
   const sidebarItems = [
     { 
       name: 'Dashboard', 
@@ -109,6 +121,23 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
         <header className="bg-white shadow-sm p-4">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-medium text-gray-800">{title}</h1>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-full bg-moroccan-blue text-white flex items-center justify-center">
+                  <span className="text-sm font-medium">A</span>
+                </div>
+                <span className="font-medium text-sm text-gray-700">Admin</span>
+              </div>
+              <Button 
+                onClick={handleLogout}
+                variant="outline" 
+                size="sm" 
+                className="flex items-center space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </Button>
+            </div>
           </div>
         </header>
 
