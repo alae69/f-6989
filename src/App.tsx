@@ -18,6 +18,9 @@ import AdminBookings from "./pages/AdminBookings";
 import AdminUsers from "./pages/AdminUsers";
 import AdminSettings from "./pages/AdminSettings";
 import AdminSystem from "./pages/AdminSystem";
+import StaffDashboard from "./pages/StaffDashboard";
+import StaffProperties from "./pages/StaffProperties";
+import StaffBookings from "./pages/StaffBookings";
 import PropertiesPage from "./pages/PropertiesPage";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import NotFound from "./pages/NotFound";
@@ -91,6 +94,23 @@ const App = () => (
               <Route path="/admin/system" element={
                 <AuthCheck requiredRole="admin">
                   <AdminSystem />
+                </AuthCheck>
+              } />
+              
+              {/* Staff routes with AuthCheck */}
+              <Route path="/staff" element={
+                <AuthCheck requiredRole="staff">
+                  <StaffDashboard />
+                </AuthCheck>
+              } />
+              <Route path="/staff/properties" element={
+                <AuthCheck requiredRole="staff">
+                  <StaffProperties />
+                </AuthCheck>
+              } />
+              <Route path="/staff/bookings" element={
+                <AuthCheck requiredRole="staff">
+                  <StaffBookings />
                 </AuthCheck>
               } />
               

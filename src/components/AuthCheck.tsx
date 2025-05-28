@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface AuthCheckProps {
   children: ReactNode;
-  requiredRole?: 'admin' | 'user' | 'owner';
+  requiredRole?: 'admin' | 'staff' | 'user' | 'owner';
 }
 
 const AuthCheck = ({ children, requiredRole }: AuthCheckProps) => {
@@ -17,6 +17,8 @@ const AuthCheck = ({ children, requiredRole }: AuthCheckProps) => {
     if (!isLoggedIn) {
       navigate('/login');
     } else if (requiredRole === 'admin' && userRole !== 'admin') {
+      navigate('/');
+    } else if (requiredRole === 'staff' && userRole !== 'staff' && userRole !== 'admin') {
       navigate('/');
     } else if (requiredRole === 'owner' && userRole !== 'owner' && userRole !== 'admin') {
       navigate('/');
