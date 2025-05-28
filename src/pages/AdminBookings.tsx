@@ -1,5 +1,8 @@
+
 import React, { useState } from 'react';
-import { Building, Filter, Search } from 'lucide-react';
+import { Building, Filter, Search, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useBookings } from "@/contexts/BookingsContext";
 import {
@@ -31,7 +34,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
         {/* Header */}
         <header className="bg-white shadow-sm p-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-xl font-medium text-gray-800">{title}</h1>
+            <div className="flex items-center space-x-4">
+              <Link to="/admin">
+                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span>Back to Dashboard</span>
+                </Button>
+              </Link>
+              <h1 className="text-xl font-medium text-gray-800">{title}</h1>
+            </div>
           </div>
         </header>
 
@@ -63,6 +74,24 @@ const AdminBookings = () => {
     
     return matchesSearch && matchesStatus;
   });
+
+  // Get unique users from bookings (real data)
+  const uniqueUsers = Array.from(
+    new Map(
+      bookings.map(booking => [
+        booking.guestEmail,
+        {
+          name: booking.guestName,
+          email: booking.guestEmail,
+          phone: booking.phone || 'N/A',
+          totalBookings: bookings.filter(b => b.guestEmail === booking.guestEmail).length,
+          totalSpent: bookings
+            .filter(b => b.guestEmail === booking.guestEmail)
+            .reduce((sum, b) => sum + b.amount, 0)
+        }
+      ])
+    ).values()
+  );
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -98,6 +127,24 @@ const AdminBookings = () => {
 
   return (
     <AdminLayout title="Bookings">
+      {/* Stats Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium mb-2">Total Bookings</h3>
+          <p className="text-3xl font-bold text-moroccan-blue">{bookings.length}</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium mb-2">Active Users</h3>
+          <p className="text-3xl font-bold text-green-600">{uniqueUsers.length}</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium mb-2">Total Revenue</h3>
+          <p className="text-3xl font-bold text-moroccan-gold">
+            ${bookings.reduce((sum, booking) => sum + booking.amount, 0).toFixed(2)}
+          </p>
+        </div>
+      </div>
+
       {/* Filters and Search */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="relative">
@@ -162,6 +209,11 @@ const AdminBookings = () => {
                     <div className="text-xs text-gray-500">
                       {booking.guestEmail}
                     </div>
+                    {booking.phone && (
+                      <div className="text-xs text-gray-500">
+                        {booking.phone}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
                     <div className="text-sm text-gray-900 max-w-[250px] truncate">
