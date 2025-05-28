@@ -15,6 +15,7 @@ interface UserData {
   registeredDate: string;
   lastLogin: string;
   password?: string;
+  username?: string;
 }
 
 interface UserEditModalProps {
@@ -41,6 +42,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
     registeredDate: '',
     lastLogin: '',
     password: '',
+    username: '',
   });
 
   const [errors, setErrors] = useState({
@@ -48,6 +50,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
     email: '',
     phone: '',
     password: '',
+    username: '',
   });
 
   // Initialize form data when user prop changes
@@ -55,7 +58,8 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
     if (user) {
       setFormData({
         ...user,
-        password: '' // Don't populate password field for security
+        password: '', // Don't populate password field for security
+        username: user.username || ''
       });
     } else {
       // Default values for a new user
@@ -69,6 +73,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
         registeredDate: '',
         lastLogin: '',
         password: '',
+        username: '',
       });
     }
   }, [user]);
@@ -90,11 +95,18 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
       email: '',
       phone: '',
       password: '',
+      username: '',
     };
 
     // Validate name
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
+      isValid = false;
+    }
+
+    // Validate username
+    if (!formData.username?.trim()) {
+      newErrors.username = 'Username is required for login';
       isValid = false;
     }
 
@@ -157,6 +169,22 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
             />
             {errors.name && (
               <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+            )}
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Username
+            </label>
+            <Input
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              className={errors.username ? "border-red-300" : ""}
+              placeholder="Username for login"
+            />
+            {errors.username && (
+              <p className="mt-1 text-xs text-red-500">{errors.username}</p>
             )}
           </div>
           

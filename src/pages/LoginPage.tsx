@@ -24,8 +24,8 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-// Mock user database with roles
-const users = [
+// Mock user database with roles (default users)
+const defaultUsers = [
   { username: "admin", password: "password123", role: "admin", name: "Admin User" },
   { username: "staff", password: "password123", role: "staff", name: "Staff User" },
   { username: "user", password: "password123", role: "user", name: "Regular User" },
@@ -47,13 +47,26 @@ const LoginPage = () => {
   const onSubmit = (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // Mock authentication - Find user in our mock database
+    // Mock authentication - Find user in both default users and admin-created users
     setTimeout(() => {
       setIsLoading(false);
       
-      const user = users.find(u => u.username === data.username && u.password === data.password);
+      // Get users created through admin panel
+      const savedUsers = localStorage.getItem('martilhaven_users');
+      const adminCreatedUsers = savedUsers ? JSON.parse(savedUsers) : [];
       
-      if (user) {
+      // Combine default users with admin-created users
+      const allUsers = [...defaultUsers, ...adminCreatedUsers];
+      
+      // Find user by username first
+      const userByUsername = allUsers.find(u => u.username === data.username);
+      
+      // If no username match, try email for admin-created users
+      const userByEmail = adminCreatedUsers.find(u => u.email === data.username);
+      
+      const user = userByUsername || userByEmail;
+      
+      if (user && user.password === data.password) {
         // Store user authentication data
         localStorage.setItem("userRole", user.role);
         localStorage.setItem("isLoggedIn", "true");
@@ -76,6 +89,7 @@ const LoginPage = () => {
             });
             navigate("/staff");
             break;
+          case "customer":
           case "user":
             toast({
               title: "Login successful",
@@ -125,9 +139,9 @@ const LoginPage = () => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Username or Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input placeholder="Enter your username or email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -163,7 +177,8 @@ const LoginPage = () => {
             Demo credentials:<br />
             <span className="font-medium">Admin:</span> admin / password123<br />
             <span className="font-medium">Staff:</span> staff / password123<br />
-            <span className="font-medium">User:</span> user / password123
+            <span className="font-medium">User:</span> user / password123<br />
+            <span className="text-xs mt-2 block">Or use any user created through admin panel</span>
           </p>
         </div>
       </div>
