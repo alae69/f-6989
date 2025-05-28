@@ -2,14 +2,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropertyCard from './PropertyCard';
-import { Property } from '@/data/properties';
+import { useProperties } from '@/contexts/PropertiesContext';
 
-interface FeaturedPropertiesProps {
-  properties: Property[];
-}
-
-const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ properties }) => {
-  const featuredProperties = properties.filter(property => property.featured);
+const FeaturedProperties: React.FC = () => {
+  const { properties, loading } = useProperties();
+  
+  // Filter for featured properties that are approved
+  const featuredProperties = properties.filter(property => 
+    property.featured && property.status === 'approved'
+  );
+  
+  if (loading) {
+    return (
+      <section className="py-16 bg-moroccan-white">
+        <div className="container-custom">
+          <div className="text-center">
+            <div className="animate-pulse">Loading featured properties...</div>
+          </div>
+        </div>
+      </section>
+    );
+  }
   
   return (
     <section className="py-16 bg-moroccan-white">

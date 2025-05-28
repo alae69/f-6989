@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { properties } from '@/data/properties';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
@@ -16,7 +15,7 @@ const Index = () => {
         <Hero />
         
         {/* Featured Properties Section */}
-        <FeaturedProperties properties={properties} />
+        <FeaturedProperties />
         
         {/* About Martil Section */}
         <section className="py-16 bg-white">
