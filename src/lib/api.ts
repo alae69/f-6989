@@ -67,7 +67,55 @@ export const usersApi = {
       },
       body: JSON.stringify(user),
     });
-    if (!response.ok) throw new Error('Failed to create user');
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create user');
+    }
     return response.json();
+  },
+
+  update: async (id: string, user: any) => {
+    const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to update user');
+    }
+    return response.json();
+  },
+
+  delete: async (id: string) => {
+    const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to delete user');
+    }
+    return response.json();
+  },
+};
+
+// Authentication API
+export const authApi = {
+  login: async (username: string, password: string) => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Login failed');
+    }
+    return data;
   },
 };

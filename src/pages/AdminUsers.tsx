@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import AdminLayout from '@/components/AdminLayout';
 import { Button } from '@/components/ui/button';
 import UserEditModal from '@/components/UserEditModal';
+import { usersApi } from '@/lib/api';
 import {
   Table,
   TableBody,
@@ -25,6 +26,7 @@ interface UserData {
   registeredDate: string;
   lastLogin: string;
   password?: string;
+  username?: string;
 }
 
 const AdminUsers = () => {
@@ -32,6 +34,7 @@ const AdminUsers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [users, setUsers] = useState<UserData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
@@ -39,91 +42,41 @@ const AdminUsers = () => {
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [newPassword, setNewPassword] = useState('');
 
-  // Load users from localStorage on initial render
+  // Load users from API
   useEffect(() => {
-    const savedUsers = localStorage.getItem('martilhaven_users');
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
-    } else {
-      // Sample users data if none exist
-      const defaultUsers = [
-        {
-          id: "1",
-          name: "John Smith",
-          email: "john.smith@example.com",
-          phone: "+1 123-456-7890",
-          role: "customer",
-          status: "active",
-          registeredDate: "2023-01-15",
-          lastLogin: "2023-05-28"
-        },
-        {
-          id: "2",
-          name: "Sarah Johnson",
-          email: "sarah.j@example.com",
-          phone: "+1 234-567-8901",
-          role: "customer",
-          status: "active",
-          registeredDate: "2023-02-05",
-          lastLogin: "2023-05-27"
-        },
-        {
-          id: "3",
-          name: "Michael Brown",
-          email: "mbrown@example.com",
-          phone: "+1 345-678-9012",
-          role: "customer",
-          status: "inactive",
-          registeredDate: "2023-02-18",
-          lastLogin: "2023-04-10"
-        },
-        {
-          id: "4",
-          name: "Amina Benali",
-          email: "amina@martilhaven.com",
-          phone: "+212 5XX XX XX XX",
-          role: "admin",
-          status: "active",
-          registeredDate: "2023-01-01",
-          lastLogin: "2023-05-30"
-        },
-        {
-          id: "5",
-          name: "Youssef Alami",
-          email: "youssef@martilhaven.com",
-          phone: "+212 6XX XX XX XX",
-          role: "staff",
-          status: "active",
-          registeredDate: "2023-01-05",
-          lastLogin: "2023-05-29"
-        },
-        {
-          id: "6",
-          name: "Laura Wilson",
-          email: "lwilson@example.com",
-          phone: "+1 456-789-0123",
-          role: "customer",
-          status: "active",
-          registeredDate: "2023-03-10",
-          lastLogin: "2023-05-25"
-        }
-      ];
-      setUsers(defaultUsers as UserData[]);
-      localStorage.setItem('martilhaven_users', JSON.stringify(defaultUsers));
-    }
+    loadUsers();
   }, []);
 
-  // Save users to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('martilhaven_users', JSON.stringify(users));
-  }, [users]);
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const fetchedUsers = await usersApi.getAll();
+      console.log('Fetched users:', fetchedUsers);
+      setUsers(fetchedUsers);
+    } catch (error) {
+      console.error('Error loading users:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load users. Using offline mode.",
+        variant: "destructive",
+      });
+      // Fallback to localStorage if API fails
+      const savedUsers = localStorage.getItem('martilhaven_users');
+      if (savedUsers) {
+        setUsers(JSON.parse(savedUsers));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter users by search term and role
   const filteredUsers = users.filter(user => {
     // Filter by search term
     const matchesSearch = 
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase()));
     
     // Filter by role
     const matchesRole = filterRole === 'all' || user.role === filterRole;
@@ -146,32 +99,6 @@ const AdminUsers = () => {
     }
   };
 
-  const handleUpdateUserStatus = (id: string, newStatus: string) => {
-    setUsers(prevUsers =>
-      prevUsers.map(user =>
-        user.id === id ? { ...user, status: newStatus as 'active' | 'inactive' } : user
-      )
-    );
-    
-    toast({
-      title: "User Status Updated",
-      description: `User status has been updated to ${newStatus}.`,
-    });
-  };
-
-  const handleUpdateUserRole = (id: string, newRole: string) => {
-    setUsers(prevUsers =>
-      prevUsers.map(user =>
-        user.id === id ? { ...user, role: newRole as 'admin' | 'staff' | 'customer' } : user
-      )
-    );
-    
-    toast({
-      title: "User Role Updated",
-      description: `User role has been updated to ${newRole}.`,
-    });
-  };
-
   const handleEditUser = (user: UserData) => {
     setSelectedUser(user);
     setIsEditModalOpen(true);
@@ -182,16 +109,26 @@ const AdminUsers = () => {
     setIsConfirmDialogOpen(true);
   };
 
-  const confirmDeleteUser = () => {
+  const confirmDeleteUser = async () => {
     if (selectedUser) {
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
-      setIsConfirmDialogOpen(false);
-      setSelectedUser(null);
-      
-      toast({
-        title: "User Deleted",
-        description: "The user has been successfully deleted.",
-      });
+      try {
+        await usersApi.delete(selectedUser.id);
+        await loadUsers(); // Reload users from API
+        setIsConfirmDialogOpen(false);
+        setSelectedUser(null);
+        
+        toast({
+          title: "User Deleted",
+          description: "The user has been successfully deleted.",
+        });
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        toast({
+          title: "Error",
+          description: "Failed to delete user. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -206,59 +143,76 @@ const AdminUsers = () => {
     setIsPasswordDialogOpen(true);
   };
 
-  const confirmChangePassword = () => {
+  const confirmChangePassword = async () => {
     if (selectedUser && newPassword) {
-      // In a real application, you would hash the password before storing it
-      setUsers(prevUsers =>
-        prevUsers.map(user =>
-          user.id === selectedUser.id ? { ...user, password: newPassword } : user
-        )
-      );
+      try {
+        await usersApi.update(selectedUser.id, {
+          ...selectedUser,
+          password: newPassword
+        });
+        
+        setIsPasswordDialogOpen(false);
+        setSelectedUser(null);
+        setNewPassword('');
+        
+        toast({
+          title: "Password Changed",
+          description: "The user's password has been successfully changed.",
+        });
+      } catch (error) {
+        console.error('Error changing password:', error);
+        toast({
+          title: "Error",
+          description: "Failed to change password. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleSaveUser = async (userData: UserData) => {
+    try {
+      if (selectedUser) {
+        // Edit existing user
+        await usersApi.update(selectedUser.id, userData);
+        toast({
+          title: "User Updated",
+          description: "The user information has been successfully updated.",
+        });
+      } else {
+        // Add new user
+        await usersApi.create(userData);
+        toast({
+          title: "User Added",
+          description: "New user has been successfully added.",
+        });
+      }
       
-      setIsPasswordDialogOpen(false);
-      setSelectedUser(null);
-      setNewPassword('');
-      
+      await loadUsers(); // Reload users from API
+      setIsEditModalOpen(false);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error('Error saving user:', error);
       toast({
-        title: "Password Changed",
-        description: "The user's password has been successfully changed.",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to save user. Please try again.",
+        variant: "destructive",
       });
     }
   };
 
-  const handleSaveUser = (userData: UserData) => {
-    if (selectedUser) {
-      // Edit existing user
-      setUsers(prevUsers =>
-        prevUsers.map(user =>
-          user.id === selectedUser.id ? { ...userData, id: user.id } : user
-        )
-      );
-      
-      toast({
-        title: "User Updated",
-        description: "The user information has been successfully updated.",
-      });
-    } else {
-      // Add new user
-      const newUser: UserData = {
-        ...userData,
-        id: `USER${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
-        registeredDate: new Date().toISOString().split('T')[0],
-        lastLogin: '-',
-      };
-      
-      setUsers(prevUsers => [...prevUsers, newUser]);
-      
-      toast({
-        title: "User Added",
-        description: "New user has been successfully added.",
-      });
-    }
-    
-    setIsEditModalOpen(false);
-    setIsAddModalOpen(false);
-  };
+  if (loading) {
+    return (
+      <AdminLayout title="Users">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-moroccan-blue mx-auto mb-4"></div>
+            <p>Loading users...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout title="Users">
@@ -327,7 +281,9 @@ const AdminUsers = () => {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">ID: {user.id}</div>
+                        <div className="text-sm text-gray-500">
+                          {user.username ? `@${user.username}` : `ID: ${user.id}`}
+                        </div>
                       </div>
                     </div>
                   </TableCell>
