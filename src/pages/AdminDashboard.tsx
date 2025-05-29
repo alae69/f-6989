@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
   const totalRevenue = bookings
     .filter(b => b.status === 'confirmed')
-    .reduce((sum, b) => sum + (b.totalPrice || 0), 0);
+    .reduce((sum, b) => sum + (b.amount || 0), 0);
 
   const stats = [
     {
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
                       <p className="text-sm text-gray-500">Check-in: {booking.checkIn}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">${booking.totalPrice}</p>
+                      <p className="text-sm font-medium">${booking.amount}</p>
                       <span className={`text-xs px-2 py-1 rounded-full ${
                         booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
                         booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
