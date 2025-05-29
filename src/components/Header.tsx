@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { List, X, User, Mail, Lock, ChevronDown, LogOut } from "lucide-react";
@@ -5,6 +6,7 @@ import AuthModal from "./AuthModal";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,6 +15,7 @@ const Header = () => {
   const [userName, setUserName] = useState('');
   const [loginMethod, setLoginMethod] = useState('');
   const navigate = useNavigate();
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -28,12 +31,15 @@ const Header = () => {
       setUserName(name);
       setLoginMethod(method);
     };
+
     window.addEventListener("scroll", handleScroll);
     checkAuth();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const navigationLinks = [{
     name: "Home",
     path: "/"
@@ -47,21 +53,38 @@ const Header = () => {
     name: "Contact",
     path: "/contact"
   }];
+
   const handleListPropertyClick = () => {
     if (isLoggedIn) {
-      navigate('/owner-dashboard');
+      const userRole = localStorage.getItem('userRole');
+      if (userRole === 'admin') {
+        navigate('/admin');
+      } else if (userRole === 'staff') {
+        navigate('/staff');
+      } else {
+        navigate('/owner-dashboard');
+      }
     } else {
       setShowAuthModal(true);
     }
     setIsMobileMenuOpen(false);
   };
+
   const handleAuthSuccess = () => {
     setShowAuthModal(false);
     setIsLoggedIn(true);
     setUserName(localStorage.getItem('userName') || 'User');
     setLoginMethod(localStorage.getItem('loginMethod') || '');
-    navigate('/owner-dashboard');
+    const userRole = localStorage.getItem('userRole');
+    if (userRole === 'admin') {
+      navigate('/admin');
+    } else if (userRole === 'staff') {
+      navigate('/staff');
+    } else {
+      navigate('/owner-dashboard');
+    }
   };
+
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userRole');
@@ -73,6 +96,18 @@ const Header = () => {
     setLoginMethod('');
     navigate('/');
   };
+
+  const handleProfileClick = () => {
+    const userRole = localStorage.getItem('userRole');
+    if (userRole === 'admin') {
+      navigate('/admin');
+    } else if (userRole === 'staff') {
+      navigate('/staff');
+    } else {
+      navigate('/owner-dashboard');
+    }
+  };
+
   const getLoginMethodIcon = () => {
     switch (loginMethod) {
       case 'google':
@@ -85,6 +120,7 @@ const Header = () => {
         return <User className="h-3 w-3 text-gray-500" />;
     }
   };
+
   const getLoginMethodText = () => {
     switch (loginMethod) {
       case 'google':
@@ -97,7 +133,9 @@ const Header = () => {
         return 'User';
     }
   };
-  return <>
+
+  return (
+    <>
       <header className={`${isScrolled ? "bg-white shadow-sm" : "bg-transparent"} sticky top-0 z-50 transition-all duration-300`}>
         <div className="container-custom mx-auto px-4 bg-slate-200">
           <div className="flex items-center justify-between h-20">
@@ -116,14 +154,26 @@ const Header = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
-              {navigationLinks.map(link => <NavLink key={link.path} to={link.path} className={({
-              isActive
-            }) => `text-sm font-medium transition-colors hover:text-moroccan-blue ${isActive ? "text-moroccan-blue" : "text-gray-700"}`}>
+              {navigationLinks.map(link => (
+                <NavLink 
+                  key={link.path} 
+                  to={link.path} 
+                  className={({ isActive }) => 
+                    `text-sm font-medium transition-colors hover:text-moroccan-blue ${
+                      isActive ? "text-moroccan-blue" : "text-gray-700"
+                    }`
+                  }
+                >
                   {link.name}
-                </NavLink>)}
+                </NavLink>
+              ))}
 
-              {isLoggedIn ? <div className="flex items-center space-x-3">
-                  <Button onClick={handleListPropertyClick} className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors">
+              {isLoggedIn ? (
+                <div className="flex items-center space-x-3">
+                  <Button 
+                    onClick={handleListPropertyClick} 
+                    className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors"
+                  >
                     Dashboard
                   </Button>
                   <div className="flex items-center space-x-2">
@@ -133,7 +183,10 @@ const Header = () => {
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="flex items-center space-x-1 p-2 hover:bg-gray-100 rounded-lg">
+                        <Button 
+                          variant="ghost" 
+                          className="flex items-center space-x-1 p-2 hover:bg-gray-100 rounded-lg"
+                        >
                           <Avatar className="h-8 w-8">
                             <AvatarFallback className="bg-moroccan-blue text-white text-sm">
                               {userName.charAt(0).toUpperCase()}
@@ -142,8 +195,8 @@ const Header = () => {
                           <ChevronDown className="h-3 w-3 text-gray-600" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem className="flex items-center space-x-2">
+                      <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
+                        <DropdownMenuItem className="flex items-center space-x-2 cursor-pointer">
                           <User className="h-4 w-4" />
                           <div>
                             <div className="font-medium">{userName}</div>
@@ -151,24 +204,45 @@ const Header = () => {
                           </div>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleListPropertyClick}>
+                        <DropdownMenuItem 
+                          onClick={handleProfileClick}
+                          className="cursor-pointer hover:bg-gray-100"
+                        >
                           Dashboard
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                        <DropdownMenuItem 
+                          onClick={handleLogout} 
+                          className="text-red-600 cursor-pointer hover:bg-gray-100"
+                        >
+                          <LogOut className="h-4 w-4 mr-2" />
                           Logout
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                </div> : <Button onClick={handleListPropertyClick} className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors">
+                </div>
+              ) : (
+                <Button 
+                  onClick={handleListPropertyClick} 
+                  className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors"
+                >
                   Become a host
-                </Button>}
+                </Button>
+              )}
             </nav>
 
             {/* Mobile menu button */}
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden flex items-center p-2" aria-expanded={isMobileMenuOpen}>
-              {isMobileMenuOpen ? <X className="h-6 w-6 text-gray-700" /> : <List className="h-6 w-6 text-gray-700" />}
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+              className="lg:hidden flex items-center p-2" 
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6 text-gray-700" />
+              ) : (
+                <List className="h-6 w-6 text-gray-700" />
+              )}
               <span className="sr-only">
                 {isMobileMenuOpen ? "Close menu" : "Open menu"}
               </span>
@@ -176,18 +250,31 @@ const Header = () => {
           </div>
 
           {/* Mobile Navigation */}
-          {isMobileMenuOpen && <nav className="lg:hidden py-4 border-t">
+          {isMobileMenuOpen && (
+            <nav className="lg:hidden py-4 border-t">
               <ul className="flex flex-col space-y-4">
-                {navigationLinks.map(link => <li key={link.path}>
-                    <NavLink to={link.path} className={({
-                isActive
-              }) => `block text-base transition-colors hover:text-moroccan-blue ${isActive ? "text-moroccan-blue" : "text-gray-700"}`} onClick={() => setIsMobileMenuOpen(false)}>
+                {navigationLinks.map(link => (
+                  <li key={link.path}>
+                    <NavLink 
+                      to={link.path} 
+                      className={({ isActive }) => 
+                        `block text-base transition-colors hover:text-moroccan-blue ${
+                          isActive ? "text-moroccan-blue" : "text-gray-700"
+                        }`
+                      } 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
                       {link.name}
                     </NavLink>
-                  </li>)}
+                  </li>
+                ))}
                 <li>
-                  {isLoggedIn ? <div className="space-y-2">
-                      <Button onClick={handleListPropertyClick} className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white">
+                  {isLoggedIn ? (
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={handleListPropertyClick} 
+                        className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white"
+                      >
                         Dashboard
                       </Button>
                       <div className="flex items-center justify-between">
@@ -206,26 +293,39 @@ const Header = () => {
                           </div>
                         </div>
                         <Button 
-                onClick={handleLogout}
-                variant="outline" 
-                size="sm" 
-                className="flex items-center space-x-1 lg:space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50 px-2 lg:px-3"
-              >
-                <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
-                <span className="hidden sm:inline text-xs lg:text-sm">Logout</span>
-              </Button>
+                          onClick={handleLogout}
+                          variant="outline" 
+                          size="sm" 
+                          className="flex items-center space-x-1 lg:space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50 px-2 lg:px-3"
+                        >
+                          <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
+                          <span className="hidden sm:inline text-xs lg:text-sm">Logout</span>
+                        </Button>
                       </div>
-                    </div> : <Button onClick={handleListPropertyClick} className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white">
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={handleListPropertyClick} 
+                      className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white"
+                    >
                       Become a host
-                    </Button>}
+                    </Button>
+                  )}
                 </li>
               </ul>
-            </nav>}
+            </nav>
+          )}
         </div>
       </header>
 
       {/* Authentication Modal */}
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onSuccess={handleAuthSuccess} />
-    </>;
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+        onSuccess={handleAuthSuccess} 
+      />
+    </>
+  );
 };
+
 export default Header;
