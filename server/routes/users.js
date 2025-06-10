@@ -1,5 +1,5 @@
-
 import express from 'express';
+import bcrypt from 'bcrypt';
 import { pool, isDatabaseConnected } from '../config/database.js';
 import { fallbackUsers } from '../data/fallbackData.js';
 
@@ -45,12 +45,16 @@ router.post('/', async (req, res) => {
   try {
     const { username, email, password, name, phone, role, status } = req.body;
     
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    
     if (!isDatabaseConnected) {
       const newUser = {
         id: fallbackUsers.length + 1,
         username,
         email,
-        password,
+        password: hashedPassword,
         name,
         phone: phone || '',
         role: role || 'customer',
@@ -74,7 +78,7 @@ router.post('/', async (req, res) => {
     
     const result = await pool.query(
       'INSERT INTO users (username, email, password, name, phone, role, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, username, email, name, phone, role, status, created_at, last_login',
-      [username, email, password, name, phone || '', role || 'customer', status || 'active']
+      [username, email, hashedPassword, name, phone || '', role || 'customer', status || 'active']
     );
     
     const user = result.rows[0];
@@ -102,7 +106,14 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, email, name, phone, role, status } = req.body;
+    const { username, email, name, phone, role, status, password } = req.body;
+    
+    // If password is provided, hash it
+    let hashedPassword = null;
+    if (password) {
+      const saltRounds = 10;
+      hashedPassword = await bcrypt.hash(password, saltRounds);
+    }
     
     if (!isDatabaseConnected) {
       const userIndex = fallbackUsers.findIndex(u => u.id == id);
@@ -117,7 +128,8 @@ router.put('/:id', async (req, res) => {
         name,
         phone: phone || '',
         role,
-        status
+        status,
+        ...(hashedPassword && { password: hashedPassword })
       };
       
       return res.json({
@@ -133,10 +145,16 @@ router.put('/:id', async (req, res) => {
       });
     }
     
-    const result = await pool.query(
-      'UPDATE users SET username = $1, email = $2, name = $3, phone = $4, role = $5, status = $6 WHERE id = $7 RETURNING id, username, email, name, phone, role, status, created_at, last_login',
-      [username, email, name, phone || '', role, status, id]
-    );
+    let query, params;
+    if (hashedPassword) {
+      query = 'UPDATE users SET username = $1, email = $2, name = $3, phone = $4, role = $5, status = $6, password = $7 WHERE id = $8 RETURNING id, username, email, name, phone, role, status, created_at, last_login';
+      params = [username, email, name, phone || '', role, status, hashedPassword, id];
+    } else {
+      query = 'UPDATE users SET username = $1, email = $2, name = $3, phone = $4, role = $5, status = $6 WHERE id = $7 RETURNING id, username, email, name, phone, role, status, created_at, last_login';
+      params = [username, email, name, phone || '', role, status, id];
+    }
+    
+    const result = await pool.query(query, params);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });

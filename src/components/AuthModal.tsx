@@ -24,7 +24,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
     email: '',
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    phone: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,20 +58,39 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
           setError('Login failed. Please check your credentials.');
         }
       } else {
-        // Registration (still mock for now)
+        // Registration with real API
         if (formData.password !== formData.confirmPassword) {
           setError('Passwords do not match');
           return;
         }
 
-        // Simulate registration success
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userRole', 'customer');
-        localStorage.setItem('userName', formData.name);
-        localStorage.setItem('userEmail', formData.email);
-        localStorage.setItem('loginMethod', 'email');
+        if (formData.password.length < 8) {
+          setError('Password must be at least 8 characters long');
+          return;
+        }
+
+        const response = await authApi.register({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          phone: formData.phone
+        });
+
+        console.log('Registration response:', response);
         
-        onSuccess();
+        if (response.success && response.user) {
+          // Store user info in localStorage
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('userRole', response.user.role);
+          localStorage.setItem('userName', response.user.name);
+          localStorage.setItem('userEmail', response.user.email);
+          localStorage.setItem('loginMethod', 'credentials');
+          
+          onSuccess();
+        } else {
+          setError('Registration failed. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Authentication error:', error);
@@ -96,7 +116,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
       email: '',
       username: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      phone: ''
     });
     setError('');
   };
@@ -138,14 +159,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="username">Username or Email</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               name="username"
               type="text"
               value={formData.username}
               onChange={handleInputChange}
-              required={isLogin}
+              required
               placeholder={isLogin ? "Enter username or email" : "Choose a username"}
             />
           </div>
@@ -161,6 +182,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
                 onChange={handleInputChange}
                 required={!isLogin}
                 placeholder="Enter your email"
+              />
+            </div>
+          )}
+
+          {!isLogin && (
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone (optional)</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="Enter your phone number"
               />
             </div>
           )}
@@ -185,6 +220,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            {!isLogin && (
+              <p className="text-xs text-gray-500">Password must be at least 8 characters long</p>
+            )}
           </div>
 
           {!isLogin && (
