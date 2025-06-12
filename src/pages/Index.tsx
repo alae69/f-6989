@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -39,9 +38,9 @@ const Index = () => {
                 <p className="text-gray-700 mb-6">
                   Whether you're looking for a luxurious beachfront villa, a traditional Moroccan riad, or a modern apartment, Martil Haven offers a curated selection of the finest accommodations in this Mediterranean paradise.
                 </p>
-                <button className="btn-outline">
+                <Link to="/about" className="btn-outline">
                   Learn More About Martil
-                </button>
+                </Link>
               </div>
             </div>
           </div>
