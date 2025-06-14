@@ -19,8 +19,10 @@ MartilHaven is a modern vacation rental platform built for properties in Martil,
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
-- **Database ORM**: Drizzle ORM with PostgreSQL dialect
+- **Database**: PostgreSQL with Drizzle ORM
 - **Database Provider**: Neon Database (@neondatabase/serverless)
+- **Data Layer**: DatabaseStorage class implementing IStorage interface
+- **API**: RESTful endpoints for users, properties, and bookings
 - **Development**: TSX for TypeScript execution in development
 - **Build System**: esbuild for production bundling
 
@@ -45,8 +47,10 @@ MartilHaven is a modern vacation rental platform built for properties in Martil,
 ## Key Components
 
 ### Database Schema
-- **Users Table**: Basic user authentication with username/password
-- **Extensible Design**: Schema designed to accommodate additional entities (properties, bookings, etc.)
+- **Users Table**: Complete user management with roles (admin, staff, owner, user)
+- **Properties Table**: Full property listings with images, pricing, and status workflow
+- **Bookings Table**: Comprehensive booking system with guest details and payment tracking
+- **Relations**: Proper foreign key relationships between users, properties, and bookings
 
 ### Authentication System
 - **Multi-role Support**: Admin, Staff, Owner, and Customer roles
