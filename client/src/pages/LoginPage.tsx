@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from '@/hooks/use-toast';
@@ -15,6 +15,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { authApi } from '@/lib/api';
 
 // Define the schema for the login form
 const loginSchema = z.object({
@@ -24,16 +25,13 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-// Mock user database with roles (default users)
-const defaultUsers = [
-  { username: "admin", password: "password123", role: "admin", name: "Admin User" },
-  { username: "staff", password: "password123", role: "staff", name: "Staff User" },
-  { username: "user", password: "password123", role: "user", name: "Regular User" },
-];
-
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Get the intended destination from state (for redirects after login)
+  const from = location.state?.from?.pathname || '/dashboard';
 
   // Define the form with React Hook Form and Zod validation
   const form = useForm<LoginFormValues>({
@@ -44,75 +42,53 @@ const LoginPage = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // Mock authentication - Find user in both default users and admin-created users
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const response = await authApi.login(data.username, data.password);
       
-      // Get users created through admin panel
-      const savedUsers = localStorage.getItem('martilhaven_users');
-      const adminCreatedUsers = savedUsers ? JSON.parse(savedUsers) : [];
-      
-      // Combine default users with admin-created users
-      const allUsers = [...defaultUsers, ...adminCreatedUsers];
-      
-      // Find user by username first
-      const userByUsername = allUsers.find((u: any) => u.username === data.username);
-      
-      // If no username match, try email for admin-created users
-      const userByEmail = adminCreatedUsers.find((u: any) => u.email === data.username);
-      
-      const user = userByUsername || userByEmail;
-      
-      if (user && user.password === data.password) {
+      if (response.user) {
         // Store user authentication data
-        localStorage.setItem("userRole", user.role);
+        localStorage.setItem("userRole", response.user.role);
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userName", user.name);
+        localStorage.setItem("userName", response.user.name);
+        localStorage.setItem("userEmail", response.user.email);
         localStorage.setItem("loginMethod", "credentials");
         
-        // Role-based navigation
-        switch (user.role) {
+        toast({
+          title: "Login successful",
+          description: `Welcome back, ${response.user.name}!`,
+        });
+        
+        // Role-based navigation with fallback to dashboard for hosts
+        switch (response.user.role) {
           case "admin":
-            toast({
-              title: "Admin login successful",
-              description: `Welcome back, ${user.name}!`,
-            });
             navigate("/admin");
             break;
           case "staff":
-            toast({
-              title: "Staff login successful",
-              description: `Welcome back, ${user.name}!`,
-            });
             navigate("/staff");
             break;
-          case "customer":
-          case "user":
-            toast({
-              title: "Login successful",
-              description: `Welcome back, ${user.name}!`,
-            });
-            navigate("/dashboard");
+          case "owner":
+            navigate("/owner-dashboard");
             break;
+          case "user":
           default:
-            toast({
-              title: "Login successful",
-              description: `Welcome back, ${user.name}!`,
-            });
-            navigate("/dashboard");
+            // Default to dashboard for regular users and hosts
+            navigate(from);
+            break;
         }
-      } else {
-        // Invalid credentials
-        toast({
-          title: "Login failed",
-          description: "Invalid username or password. Please try again.",
-          variant: "destructive",
-        });
       }
-    }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Login failed",
+        description: "Invalid username or password. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -177,8 +153,8 @@ const LoginPage = () => {
             Demo credentials:<br />
             <span className="font-medium">Admin:</span> admin / password123<br />
             <span className="font-medium">Staff:</span> staff / password123<br />
-            <span className="font-medium">User:</span> user / password123<br />
-            <span className="text-xs mt-2 block">Or use any user created through admin panel</span>
+            <span className="font-medium">Owner:</span> owner / password123<br />
+            <span className="font-medium">User:</span> user / password123
           </p>
         </div>
       </div>
