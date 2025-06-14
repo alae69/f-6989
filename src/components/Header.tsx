@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { List, X, User, Mail, Lock, ChevronDown, LogOut } from "lucide-react";
@@ -57,12 +56,28 @@ const Header = () => {
   const handleListPropertyClick = () => {
     if (isLoggedIn) {
       const userRole = localStorage.getItem('userRole');
-      if (userRole === 'admin') {
-        navigate('/admin');
-      } else if (userRole === 'staff') {
-        navigate('/staff');
-      } else {
-        navigate('/owner-dashboard');
+      console.log('User role:', userRole); // Debug log
+      
+      // Navigate based on user role
+      switch (userRole) {
+        case 'admin':
+          console.log('Navigating to admin dashboard');
+          navigate('/admin');
+          break;
+        case 'staff':
+          console.log('Navigating to staff dashboard');
+          navigate('/staff');
+          break;
+        case 'owner':
+          console.log('Navigating to owner dashboard');
+          navigate('/owner-dashboard');
+          break;
+        case 'user':
+        case 'customer':
+        default:
+          console.log('Navigating to owner dashboard (default)');
+          navigate('/owner-dashboard');
+          break;
       }
     } else {
       setShowAuthModal(true);
@@ -75,13 +90,26 @@ const Header = () => {
     setIsLoggedIn(true);
     setUserName(localStorage.getItem('userName') || 'User');
     setLoginMethod(localStorage.getItem('loginMethod') || '');
+    
+    // Immediately navigate after successful auth
     const userRole = localStorage.getItem('userRole');
-    if (userRole === 'admin') {
-      navigate('/admin');
-    } else if (userRole === 'staff') {
-      navigate('/staff');
-    } else {
-      navigate('/owner-dashboard');
+    console.log('Auth success, user role:', userRole); // Debug log
+    
+    switch (userRole) {
+      case 'admin':
+        navigate('/admin');
+        break;
+      case 'staff':
+        navigate('/staff');
+        break;
+      case 'owner':
+        navigate('/owner-dashboard');
+        break;
+      case 'user':
+      case 'customer':
+      default:
+        navigate('/owner-dashboard');
+        break;
     }
   };
 
@@ -99,12 +127,23 @@ const Header = () => {
 
   const handleProfileClick = () => {
     const userRole = localStorage.getItem('userRole');
-    if (userRole === 'admin') {
-      navigate('/admin');
-    } else if (userRole === 'staff') {
-      navigate('/staff');
-    } else {
-      navigate('/owner-dashboard');
+    console.log('Profile click, user role:', userRole); // Debug log
+    
+    switch (userRole) {
+      case 'admin':
+        navigate('/admin');
+        break;
+      case 'staff':
+        navigate('/staff');
+        break;
+      case 'owner':
+        navigate('/owner-dashboard');
+        break;
+      case 'user':
+      case 'customer':
+      default:
+        navigate('/owner-dashboard');
+        break;
     }
   };
 
