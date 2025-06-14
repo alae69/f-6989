@@ -1,19 +1,30 @@
+
 import React, { useState, useEffect } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
-import { List, X, User, Mail, Lock, ChevronDown, LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
+import { List, X } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import Navigation from "./Navigation";
+import UserMenu from "./UserMenu";
+import MobileMenu from "./MobileMenu";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [loginMethod, setLoginMethod] = useState('');
-  const navigate = useNavigate();
+  
+  const {
+    isLoggedIn,
+    userName,
+    loginMethod,
+    handleDashboardClick,
+    handleAuthSuccess,
+    handleLogout,
+    handleProfileClick,
+    getLoginMethodIcon,
+    getLoginMethodText
+  } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,156 +32,21 @@ const Header = () => {
       setIsScrolled(scrollTop > 50);
     };
 
-    // Check authentication status
-    const checkAuth = () => {
-      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      const name = localStorage.getItem('userName') || 'User';
-      const method = localStorage.getItem('loginMethod') || '';
-      setIsLoggedIn(loggedIn);
-      setUserName(name);
-      setLoginMethod(method);
-    };
-
     window.addEventListener("scroll", handleScroll);
-    checkAuth();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  const navigationLinks = [{
-    name: "Home",
-    path: "/"
-  }, {
-    name: "Properties",
-    path: "/properties"
-  }, {
-    name: "About",
-    path: "/about"
-  }, {
-    name: "Contact",
-    path: "/contact"
-  }];
-
-  const handleListPropertyClick = () => {
-    if (isLoggedIn) {
-      const userRole = localStorage.getItem('userRole');
-      console.log('User role:', userRole); // Debug log
-      
-      // Navigate based on user role
-      switch (userRole) {
-        case 'admin':
-          console.log('Navigating to admin dashboard');
-          navigate('/admin');
-          break;
-        case 'staff':
-          console.log('Navigating to staff dashboard');
-          navigate('/staff');
-          break;
-        case 'owner':
-          console.log('Navigating to owner dashboard');
-          navigate('/owner-dashboard');
-          break;
-        case 'user':
-        case 'customer':
-        default:
-          console.log('Navigating to owner dashboard (default)');
-          navigate('/owner-dashboard');
-          break;
-      }
-    } else {
-      setShowAuthModal(true);
-    }
+  const onDashboardClick = () => {
+    handleDashboardClick(() => setShowAuthModal(true));
     setIsMobileMenuOpen(false);
   };
 
-  const handleAuthSuccess = () => {
+  const onAuthSuccess = () => {
     setShowAuthModal(false);
-    setIsLoggedIn(true);
-    setUserName(localStorage.getItem('userName') || 'User');
-    setLoginMethod(localStorage.getItem('loginMethod') || '');
-    
-    // Immediately navigate after successful auth
-    const userRole = localStorage.getItem('userRole');
-    console.log('Auth success, user role:', userRole); // Debug log
-    
-    switch (userRole) {
-      case 'admin':
-        navigate('/admin');
-        break;
-      case 'staff':
-        navigate('/staff');
-        break;
-      case 'owner':
-        navigate('/owner-dashboard');
-        break;
-      case 'user':
-      case 'customer':
-      default:
-        navigate('/owner-dashboard');
-        break;
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('loginMethod');
-    setIsLoggedIn(false);
-    setUserName('');
-    setLoginMethod('');
-    navigate('/');
-  };
-
-  const handleProfileClick = () => {
-    const userRole = localStorage.getItem('userRole');
-    console.log('Profile click, user role:', userRole); // Debug log
-    
-    switch (userRole) {
-      case 'admin':
-        navigate('/admin');
-        break;
-      case 'staff':
-        navigate('/staff');
-        break;
-      case 'owner':
-        navigate('/owner-dashboard');
-        break;
-      case 'user':
-      case 'customer':
-      default:
-        navigate('/owner-dashboard');
-        break;
-    }
-  };
-
-  const getLoginMethodIcon = () => {
-    switch (loginMethod) {
-      case 'google':
-        return;
-      case 'email':
-        return <Mail className="h-3 w-3 text-green-500" />;
-      case 'credentials':
-        return <Lock className="h-3 w-3 text-orange-500" />;
-      default:
-        return <User className="h-3 w-3 text-gray-500" />;
-    }
-  };
-
-  const getLoginMethodText = () => {
-    switch (loginMethod) {
-      case 'google':
-        return 'Google';
-      case 'email':
-        return 'Email';
-      case 'credentials':
-        return 'Admin';
-      default:
-        return 'User';
-    }
+    handleAuthSuccess();
   };
 
   return (
@@ -192,84 +68,33 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              {navigationLinks.map(link => (
-                <NavLink 
-                  key={link.path} 
-                  to={link.path} 
-                  className={({ isActive }) => 
-                    `text-sm font-medium transition-colors hover:text-moroccan-blue ${
-                      isActive ? "text-moroccan-blue" : "text-gray-700"
-                    }`
-                  }
-                >
-                  {link.name}
-                </NavLink>
-              ))}
-
+            <div className="hidden lg:flex items-center space-x-8">
+              <Navigation />
+              
               {isLoggedIn ? (
                 <div className="flex items-center space-x-3">
                   <Button 
-                    onClick={handleListPropertyClick} 
+                    onClick={onDashboardClick} 
                     className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors"
                   >
                     Dashboard
                   </Button>
-                  <div className="flex items-center space-x-2">
-                    <div className="flex items-center space-x-1">
-                      {getLoginMethodIcon()}
-                    </div>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="flex items-center space-x-1 p-2 hover:bg-gray-100 rounded-lg"
-                        >
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="bg-moroccan-blue text-white text-sm">
-                              {userName.charAt(0).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <ChevronDown className="h-3 w-3 text-gray-600" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48 bg-white border shadow-lg">
-                        <DropdownMenuItem className="flex items-center space-x-2 cursor-pointer">
-                          <User className="h-4 w-4" />
-                          <div>
-                            <div className="font-medium">{userName}</div>
-                            <div className="text-xs text-gray-500">{getLoginMethodText()}</div>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={handleProfileClick}
-                          className="cursor-pointer hover:bg-gray-100"
-                        >
-                          Dashboard
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={handleLogout} 
-                          className="text-red-600 cursor-pointer hover:bg-gray-100"
-                        >
-                          <LogOut className="h-4 w-4 mr-2" />
-                          Logout
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                  <UserMenu 
+                    userName={userName}
+                    loginMethod={loginMethod}
+                    onProfileClick={handleProfileClick}
+                    onLogout={handleLogout}
+                  />
                 </div>
               ) : (
                 <Button 
-                  onClick={handleListPropertyClick} 
+                  onClick={onDashboardClick} 
                   className="bg-moroccan-gold hover:bg-moroccan-gold/90 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors"
                 >
                   Become a host
                 </Button>
               )}
-            </nav>
+            </div>
 
             {/* Mobile menu button */}
             <button 
@@ -289,71 +114,17 @@ const Header = () => {
           </div>
 
           {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <nav className="lg:hidden py-4 border-t">
-              <ul className="flex flex-col space-y-4">
-                {navigationLinks.map(link => (
-                  <li key={link.path}>
-                    <NavLink 
-                      to={link.path} 
-                      className={({ isActive }) => 
-                        `block text-base transition-colors hover:text-moroccan-blue ${
-                          isActive ? "text-moroccan-blue" : "text-gray-700"
-                        }`
-                      } 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-                <li>
-                  {isLoggedIn ? (
-                    <div className="space-y-2">
-                      <Button 
-                        onClick={handleListPropertyClick} 
-                        className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white"
-                      >
-                        Dashboard
-                      </Button>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="bg-moroccan-blue text-white text-sm">
-                              {userName.charAt(0).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium text-sm">{userName}</div>
-                            <div className="text-xs text-gray-500 flex items-center space-x-1">
-                              {getLoginMethodIcon()}
-                              <span>{getLoginMethodText()}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <Button 
-                          onClick={handleLogout}
-                          variant="outline" 
-                          size="sm" 
-                          className="flex items-center space-x-1 lg:space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50 px-2 lg:px-3"
-                        >
-                          <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
-                          <span className="hidden sm:inline text-xs lg:text-sm">Logout</span>
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <Button 
-                      onClick={handleListPropertyClick} 
-                      className="w-full bg-moroccan-gold hover:bg-moroccan-gold/90 text-white"
-                    >
-                      Become a host
-                    </Button>
-                  )}
-                </li>
-              </ul>
-            </nav>
-          )}
+          <MobileMenu 
+            isOpen={isMobileMenuOpen}
+            isLoggedIn={isLoggedIn}
+            userName={userName}
+            loginMethod={loginMethod}
+            onDashboardClick={onDashboardClick}
+            onLogout={handleLogout}
+            onLinkClick={() => setIsMobileMenuOpen(false)}
+            getLoginMethodIcon={getLoginMethodIcon}
+            getLoginMethodText={getLoginMethodText}
+          />
         </div>
       </header>
 
@@ -361,7 +132,7 @@ const Header = () => {
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
-        onSuccess={handleAuthSuccess} 
+        onSuccess={onAuthSuccess} 
       />
     </>
   );
