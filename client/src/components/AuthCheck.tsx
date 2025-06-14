@@ -22,6 +22,8 @@ const AuthCheck = ({ children, requiredRole }: AuthCheckProps) => {
       navigate('/');
     } else if (requiredRole === 'owner' && userRole !== 'owner' && userRole !== 'admin') {
       navigate('/');
+    } else if (requiredRole === 'user' && userRole !== 'user' && userRole !== 'customer' && userRole !== 'admin') {
+      navigate('/');
     }
   }, [navigate, requiredRole]);
   

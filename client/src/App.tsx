@@ -23,6 +23,7 @@ import StaffProperties from "./pages/StaffProperties";
 import StaffBookings from "./pages/StaffBookings";
 import PropertiesPage from "./pages/PropertiesPage";
 import OwnerDashboard from "./pages/OwnerDashboard";
+import UserDashboard from "./pages/UserDashboard";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
@@ -57,6 +58,13 @@ const App = () => (
               <Route path="/help-center" element={<HelpCenterPage />} />
               <Route path="/cancellation-options" element={<CancellationOptionsPage />} />
               <Route path="/safety-information" element={<SafetyInformationPage />} />
+              
+              {/* Protected user dashboard route */}
+              <Route path="/dashboard" element={
+                <AuthCheck requiredRole="user">
+                  <UserDashboard />
+                </AuthCheck>
+              } />
               
               {/* Protected owner dashboard route */}
               <Route path="/owner-dashboard" element={

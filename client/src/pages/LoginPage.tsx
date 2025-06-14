@@ -62,7 +62,7 @@ const LoginPage = () => {
       const userByUsername = allUsers.find(u => u.username === data.username);
       
       // If no username match, try email for admin-created users
-      const userByEmail = adminCreatedUsers.find(u => u.email === data.username);
+      const userByEmail = adminCreatedUsers.find((u: any) => u.email === data.username);
       
       const user = userByUsername || userByEmail;
       
@@ -95,7 +95,7 @@ const LoginPage = () => {
               title: "Login successful",
               description: `Welcome back, ${user.name}!`,
             });
-            navigate("/");
+            navigate("/dashboard");
             break;
           default:
             toast({
