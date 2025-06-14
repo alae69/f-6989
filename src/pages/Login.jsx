@@ -13,7 +13,7 @@ const Login = () => {
       // Simulate login API call
       const response = await fakeLoginApi(email, password); // Replace with your actual API call
       if (response.success) {
-        // Save token/session if needed
+        // Save token to localStorage
         localStorage.setItem('token', response.token);
 
         // Redirect to /dashboard
