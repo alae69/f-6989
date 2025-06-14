@@ -59,7 +59,7 @@ const LoginPage = () => {
       const allUsers = [...defaultUsers, ...adminCreatedUsers];
       
       // Find user by username first
-      const userByUsername = allUsers.find(u => u.username === data.username);
+      const userByUsername = allUsers.find((u: any) => u.username === data.username);
       
       // If no username match, try email for admin-created users
       const userByEmail = adminCreatedUsers.find((u: any) => u.email === data.username);
@@ -102,7 +102,7 @@ const LoginPage = () => {
               title: "Login successful",
               description: `Welcome back, ${user.name}!`,
             });
-            navigate("/");
+            navigate("/dashboard");
         }
       } else {
         // Invalid credentials
