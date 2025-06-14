@@ -59,9 +59,9 @@ const App = () => (
               <Route path="/cancellation-options" element={<CancellationOptionsPage />} />
               <Route path="/safety-information" element={<SafetyInformationPage />} />
               
-              {/* Protected user dashboard route */}
+              {/* Protected user dashboard route - allow any authenticated user */}
               <Route path="/dashboard" element={
-                <AuthCheck requiredRole="user">
+                <AuthCheck requiredRole="any">
                   <UserDashboard />
                 </AuthCheck>
               } />
