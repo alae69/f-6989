@@ -5,6 +5,11 @@ import { insertUserSchema, insertPropertySchema, insertBookingSchema } from "@sh
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check route
+  app.get("/api/health", async (req, res) => {
+    res.json({ status: "healthy", timestamp: new Date().toISOString() });
+  });
+
   // Authentication routes
   app.post("/api/auth/login", async (req, res) => {
     try {
@@ -94,6 +99,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/users", async (req, res) => {
+    try {
+      console.log("Creating user with data:", req.body);
+      
+      // Validate required fields
+      if (!req.body.username || !req.body.name || !req.body.email) {
+        return res.status(400).json({ error: "Username, name, and email are required" });
+      }
+
+      // For new users, password is required
+      if (!req.body.password) {
+        return res.status(400).json({ error: "Password is required for new users" });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(req.body.username);
+      if (existingUser) {
+        return res.status(409).json({ error: "Username already exists" });
+      }
+
+      const existingEmailUser = await storage.getUserByEmail(req.body.email);
+      if (existingEmailUser) {
+        return res.status(409).json({ error: "Email already exists" });
+      }
+
+      // Create user data object
+      const userData = {
+        username: req.body.username,
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        phone: req.body.phone || null,
+        role: req.body.role || "user",
+        status: req.body.status || "active"
+      };
+
+      console.log("Validated user data:", userData);
+      
+      const user = await storage.createUser(userData);
+      const { password: _, ...userWithoutPassword } = user;
+      
+      console.log("User created successfully:", userWithoutPassword);
+      res.status(201).json(userWithoutPassword);
+    } catch (error) {
+      console.error("Create user error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid user data", details: error.errors });
+      }
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
   app.put("/api/users/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -101,7 +158,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid user ID" });
       }
 
-      const updateData = req.body;
+      console.log("Updating user", id, "with data:", req.body);
+
+      const updateData = { ...req.body };
+      // Remove empty password field if present
+      if (updateData.password === "") {
+        delete updateData.password;
+      }
+
       const user = await storage.updateUser(id, updateData);
       
       if (!user) {
@@ -112,6 +176,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(userWithoutPassword);
     } catch (error) {
       console.error("Update user error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/users/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid user ID" });
+      }
+
+      console.log("Deleting user with ID:", id);
+
+      const deleted = await storage.deleteUser(id);
+      if (!deleted) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.status(204).send();
+    } catch (error) {
+      console.error("Delete user error:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });
