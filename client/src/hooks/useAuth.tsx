@@ -41,8 +41,8 @@ export const useAuth = () => {
       case 'user':
       case 'customer':
       default:
-        console.log('Navigating to owner dashboard (default)');
-        navigate('/owner-dashboard');
+        console.log('Navigating to user dashboard (default)');
+        navigate('/dashboard');
         break;
     }
   };
