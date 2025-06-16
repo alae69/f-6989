@@ -109,6 +109,13 @@ export const usersApi = {
         },
         body: JSON.stringify(user),
       });
+      
+      // Check if we got HTML instead of JSON (API routing issue)
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        throw new Error('API routing issue - using localStorage fallback');
+      }
+      
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || 'Failed to create user');
@@ -120,6 +127,11 @@ export const usersApi = {
       const savedUsers = localStorage.getItem('martilhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
+      // Validate required fields
+      if (!user.username || !user.name || !user.email || !user.password) {
+        throw new Error('Username, name, email, and password are required');
+      }
+      
       // Check for duplicate username/email
       const existingUser = users.find((u: any) => 
         u.username === user.username || u.email === user.email
@@ -129,9 +141,12 @@ export const usersApi = {
         throw new Error('Username or email already exists');
       }
       
+      // Generate unique ID
+      const maxId = users.length > 0 ? Math.max(...users.map((u: any) => parseInt(u.id) || 0)) : 0;
+      
       const newUser = {
         ...user,
-        id: users.length + 1,
+        id: (maxId + 1).toString(),
         registeredDate: new Date().toISOString().split('T')[0],
         lastLogin: '-'
       };
@@ -211,6 +226,12 @@ export const authApi = {
         body: JSON.stringify({ username, password }),
       });
       
+      // Check if we got HTML instead of JSON (API routing issue)
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        throw new Error('API routing issue - using localStorage fallback');
+      }
+      
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -218,15 +239,16 @@ export const authApi = {
       return data;
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
-      // Fallback to localStorage authentication
+      // Fallback to localStorage authentication with database seeded users
       const savedUsers = localStorage.getItem('martilhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
-      // Default users for fallback
+      // Default users matching database seed data
       const defaultUsers = [
-        { username: "admin", password: "password123", role: "admin", name: "Admin User", email: "admin@example.com" },
-        { username: "staff", password: "password123", role: "staff", name: "Staff User", email: "staff@example.com" },
-        { username: "user", password: "password123", role: "customer", name: "Regular User", email: "user@example.com" },
+        { id: 1, username: "admin", password: "password123", role: "admin", name: "Admin User", email: "admin@martilhaven.com" },
+        { id: 2, username: "staff", password: "password123", role: "staff", name: "Staff User", email: "staff@martilhaven.com" },
+        { id: 3, username: "owner", password: "password123", role: "owner", name: "Property Owner", email: "owner@martilhaven.com" },
+        { id: 4, username: "user", password: "password123", role: "user", name: "Regular User", email: "user@martilhaven.com" },
       ];
       
       const allUsers = [...defaultUsers, ...users];
@@ -237,9 +259,8 @@ export const authApi = {
       
       if (user) {
         return {
-          success: true,
           user: {
-            id: user.id || Math.floor(Math.random() * 1000),
+            id: user.id,
             username: user.username,
             email: user.email,
             name: user.name,
