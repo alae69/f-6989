@@ -1,14 +1,14 @@
-import { users, properties, bookings, type User, type InsertUser, type Property, type InsertProperty, type Booking, type InsertBooking } from "@shared/schema";
-import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+
+import { supabase } from "./db";
+import type { User, Property, Booking } from "@shared/schema";
 
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: number, user: Partial<InsertUser>): Promise<User | undefined>;
+  createUser(user: any): Promise<User>;
+  updateUser(id: number, user: any): Promise<User | undefined>;
   deleteUser(id: number): Promise<boolean>;
   getAllUsers(): Promise<User[]>;
   
@@ -16,62 +16,93 @@ export interface IStorage {
   getProperty(id: number): Promise<Property | undefined>;
   getAllProperties(): Promise<Property[]>;
   getPropertiesByOwner(ownerId: number): Promise<Property[]>;
-  createProperty(property: InsertProperty): Promise<Property>;
-  updateProperty(id: number, property: Partial<InsertProperty>): Promise<Property | undefined>;
+  createProperty(property: any): Promise<Property>;
+  updateProperty(id: number, property: any): Promise<Property | undefined>;
   deleteProperty(id: number): Promise<boolean>;
   
   // Booking methods
   getBooking(id: number): Promise<Booking | undefined>;
   getAllBookings(): Promise<Booking[]>;
   getBookingsByProperty(propertyId: number): Promise<Booking[]>;
-  createBooking(booking: InsertBooking): Promise<Booking>;
-  updateBooking(id: number, booking: Partial<InsertBooking>): Promise<Booking | undefined>;
+  createBooking(booking: any): Promise<Booking>;
+  updateBooking(id: number, booking: any): Promise<Booking | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      console.error('Error fetching user:', error);
+      return undefined;
+    }
+    return data;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
-    return user || undefined;
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values({
+  async createUser(insertUser: any): Promise<User> {
+    const { data, error } = await supabase
+      .from('users')
+      .insert({
         ...insertUser,
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       })
-      .returning();
-    return user;
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   }
 
-  async updateUser(id: number, userUpdate: Partial<InsertUser>): Promise<User | undefined> {
-    const [user] = await db
-      .update(users)
-      .set({
+  async updateUser(id: number, userUpdate: any): Promise<User | undefined> {
+    const { data, error } = await supabase
+      .from('users')
+      .update({
         ...userUpdate,
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       })
-      .where(eq(users.id, id))
-      .returning();
-    return user || undefined;
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 
   async deleteUser(id: number): Promise<boolean> {
     try {
-      const result = await db.delete(users).where(eq(users.id, id));
-      return (result.rowCount ?? 0) > 0;
+      const { error } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', id);
+      
+      return !error;
     } catch (error) {
       console.error("Delete user error:", error);
       return false;
@@ -79,86 +110,159 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users).orderBy(desc(users.createdAt));
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching users:', error);
+      return [];
+    }
+    return data || [];
   }
 
   // Property methods
   async getProperty(id: number): Promise<Property | undefined> {
-    const [property] = await db.select().from(properties).where(eq(properties.id, id));
-    return property || undefined;
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 
   async getAllProperties(): Promise<Property[]> {
-    return await db.select().from(properties).orderBy(desc(properties.createdAt));
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching properties:', error);
+      return [];
+    }
+    return data || [];
   }
 
   async getPropertiesByOwner(ownerId: number): Promise<Property[]> {
-    return await db.select().from(properties).where(eq(properties.ownerId, ownerId));
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('owner_id', ownerId);
+    
+    if (error) {
+      console.error('Error fetching properties by owner:', error);
+      return [];
+    }
+    return data || [];
   }
 
-  async createProperty(insertProperty: InsertProperty): Promise<Property> {
-    const [property] = await db
-      .insert(properties)
-      .values({
+  async createProperty(insertProperty: any): Promise<Property> {
+    const { data, error } = await supabase
+      .from('properties')
+      .insert({
         ...insertProperty,
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       })
-      .returning();
-    return property;
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   }
 
-  async updateProperty(id: number, propertyUpdate: Partial<InsertProperty>): Promise<Property | undefined> {
-    const [property] = await db
-      .update(properties)
-      .set({
+  async updateProperty(id: number, propertyUpdate: any): Promise<Property | undefined> {
+    const { data, error } = await supabase
+      .from('properties')
+      .update({
         ...propertyUpdate,
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       })
-      .where(eq(properties.id, id))
-      .returning();
-    return property || undefined;
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 
   async deleteProperty(id: number): Promise<boolean> {
-    const result = await db.delete(properties).where(eq(properties.id, id));
-    return (result.rowCount ?? 0) > 0;
+    const { error } = await supabase
+      .from('properties')
+      .delete()
+      .eq('id', id);
+    
+    return !error;
   }
 
   // Booking methods
   async getBooking(id: number): Promise<Booking | undefined> {
-    const [booking] = await db.select().from(bookings).where(eq(bookings.id, id));
-    return booking || undefined;
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 
   async getAllBookings(): Promise<Booking[]> {
-    return await db.select().from(bookings).orderBy(desc(bookings.createdAt));
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching bookings:', error);
+      return [];
+    }
+    return data || [];
   }
 
   async getBookingsByProperty(propertyId: number): Promise<Booking[]> {
-    return await db.select().from(bookings).where(eq(bookings.propertyId, propertyId));
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('property_id', propertyId);
+    
+    if (error) {
+      console.error('Error fetching bookings by property:', error);
+      return [];
+    }
+    return data || [];
   }
 
-  async createBooking(insertBooking: InsertBooking): Promise<Booking> {
-    const [booking] = await db
-      .insert(bookings)
-      .values({
+  async createBooking(insertBooking: any): Promise<Booking> {
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert({
         ...insertBooking,
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       })
-      .returning();
-    return booking;
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   }
 
-  async updateBooking(id: number, bookingUpdate: Partial<InsertBooking>): Promise<Booking | undefined> {
-    const [booking] = await db
-      .update(bookings)
-      .set({
+  async updateBooking(id: number, bookingUpdate: any): Promise<Booking | undefined> {
+    const { data, error } = await supabase
+      .from('bookings')
+      .update({
         ...bookingUpdate,
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       })
-      .where(eq(bookings.id, id))
-      .returning();
-    return booking || undefined;
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) return undefined;
+    return data;
   }
 }
 
