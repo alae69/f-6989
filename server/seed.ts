@@ -19,7 +19,7 @@ export async function seedDatabase() {
         password: "password123",
         role: "admin",
         name: "Admin User",
-        email: "admin@martilhaven.com",
+        email: "admin@bluebay.com",
         status: "active"
       },
       {
@@ -27,7 +27,7 @@ export async function seedDatabase() {
         password: "password123",
         role: "staff",
         name: "Staff User",
-        email: "staff@martilhaven.com",
+        email: "staff@bluebay.com",
         status: "active"
       },
       {
@@ -35,7 +35,7 @@ export async function seedDatabase() {
         password: "password123",
         role: "owner",
         name: "Property Owner",
-        email: "owner@martilhaven.com",
+        email: "owner@bluebay.com",
         status: "active"
       },
       {
@@ -43,7 +43,7 @@ export async function seedDatabase() {
         password: "password123",
         role: "user",
         name: "Regular User",
-        email: "user@martilhaven.com",
+        email: "user@bluebay.com",
         status: "active"
       }
     ];

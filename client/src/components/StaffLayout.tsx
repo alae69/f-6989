@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Building, LogOut } from 'lucide-react';
@@ -50,11 +51,11 @@ const StaffLayout: React.FC<StaffLayoutProps> = ({
         <div className="p-4 border-b border-gray-200">
           <Link to="/" className="flex items-center space-x-2">
             <div className="bg-moroccan-blue text-white p-2 rounded">
-              <span className="font-serif text-sm">M</span>
+              <span className="font-serif text-sm">B</span>
             </div>
             <div className="font-serif text-lg text-moroccan-blue">
-              <span>Martil</span>
-              <span className="text-moroccan-gold">Haven</span>
+              <span>Blue</span>
+              <span className="text-moroccan-gold">Bay</span>
             </div>
           </Link>
         </div>
