@@ -1,5 +1,6 @@
-
-import { supabase } from "./db";
+import { db } from "./db";
+import { users, properties, bookings } from "@shared/schema";
+import { eq } from "drizzle-orm";
 import type { User, Property, Booking } from "@shared/schema";
 
 export interface IStorage {
@@ -31,238 +32,223 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) {
+    try {
+      const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+      return result[0] || undefined;
+    } catch (error) {
       console.error('Error fetching user:', error);
       return undefined;
     }
-    return data;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('username', username)
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error fetching user by username:', error);
+      return undefined;
+    }
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error fetching user by email:', error);
+      return undefined;
+    }
   }
 
   async createUser(insertUser: any): Promise<User> {
-    const { data, error } = await supabase
-      .from('users')
-      .insert({
+    try {
+      const result = await db.insert(users).values({
         ...insertUser,
-        updated_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+        updatedAt: new Date(),
+      }).returning();
+      
+      if (!result[0]) {
+        throw new Error('Failed to create user');
+      }
+      return result[0];
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
   }
 
   async updateUser(id: number, userUpdate: any): Promise<User | undefined> {
-    const { data, error } = await supabase
-      .from('users')
-      .update({
-        ...userUpdate,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.update(users)
+        .set({
+          ...userUpdate,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, id))
+        .returning();
+      
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return undefined;
+    }
   }
 
   async deleteUser(id: number): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', id);
-      
-      return !error;
+      const result = await db.delete(users).where(eq(users.id, id));
+      return true;
     } catch (error) {
-      console.error("Delete user error:", error);
+      console.error('Error deleting user:', error);
       return false;
     }
   }
 
   async getAllUsers(): Promise<User[]> {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) {
+    try {
+      return await db.select().from(users);
+    } catch (error) {
       console.error('Error fetching users:', error);
       return [];
     }
-    return data || [];
   }
 
   // Property methods
   async getProperty(id: number): Promise<Property | undefined> {
-    const { data, error } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.select().from(properties).where(eq(properties.id, id)).limit(1);
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error fetching property:', error);
+      return undefined;
+    }
   }
 
   async getAllProperties(): Promise<Property[]> {
-    const { data, error } = await supabase
-      .from('properties')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) {
+    try {
+      return await db.select().from(properties);
+    } catch (error) {
       console.error('Error fetching properties:', error);
       return [];
     }
-    return data || [];
   }
 
   async getPropertiesByOwner(ownerId: number): Promise<Property[]> {
-    const { data, error } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('owner_id', ownerId);
-    
-    if (error) {
+    try {
+      return await db.select().from(properties).where(eq(properties.ownerId, ownerId));
+    } catch (error) {
       console.error('Error fetching properties by owner:', error);
       return [];
     }
-    return data || [];
   }
 
   async createProperty(insertProperty: any): Promise<Property> {
-    const { data, error } = await supabase
-      .from('properties')
-      .insert({
+    try {
+      const result = await db.insert(properties).values({
         ...insertProperty,
-        updated_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+        updatedAt: new Date(),
+      }).returning();
+      
+      if (!result[0]) {
+        throw new Error('Failed to create property');
+      }
+      return result[0];
+    } catch (error) {
+      console.error('Error creating property:', error);
+      throw error;
+    }
   }
 
   async updateProperty(id: number, propertyUpdate: any): Promise<Property | undefined> {
-    const { data, error } = await supabase
-      .from('properties')
-      .update({
-        ...propertyUpdate,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.update(properties)
+        .set({
+          ...propertyUpdate,
+          updatedAt: new Date(),
+        })
+        .where(eq(properties.id, id))
+        .returning();
+      
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error updating property:', error);
+      return undefined;
+    }
   }
 
   async deleteProperty(id: number): Promise<boolean> {
-    const { error } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', id);
-    
-    return !error;
+    try {
+      const result = await db.delete(properties).where(eq(properties.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      return false;
+    }
   }
 
   // Booking methods
   async getBooking(id: number): Promise<Booking | undefined> {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.select().from(bookings).where(eq(bookings.id, id)).limit(1);
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error fetching booking:', error);
+      return undefined;
+    }
   }
 
   async getAllBookings(): Promise<Booking[]> {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) {
+    try {
+      return await db.select().from(bookings);
+    } catch (error) {
       console.error('Error fetching bookings:', error);
       return [];
     }
-    return data || [];
   }
 
   async getBookingsByProperty(propertyId: number): Promise<Booking[]> {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('property_id', propertyId);
-    
-    if (error) {
+    try {
+      return await db.select().from(bookings).where(eq(bookings.propertyId, propertyId));
+    } catch (error) {
       console.error('Error fetching bookings by property:', error);
       return [];
     }
-    return data || [];
   }
 
   async createBooking(insertBooking: any): Promise<Booking> {
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert({
+    try {
+      const result = await db.insert(bookings).values({
         ...insertBooking,
-        updated_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning();
+      
+      if (!result[0]) {
+        throw new Error('Failed to create booking');
+      }
+      return result[0];
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      throw error;
+    }
   }
 
   async updateBooking(id: number, bookingUpdate: any): Promise<Booking | undefined> {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({
-        ...bookingUpdate,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) return undefined;
-    return data;
+    try {
+      const result = await db.update(bookings)
+        .set({
+          ...bookingUpdate,
+          updatedAt: new Date(),
+        })
+        .where(eq(bookings.id, id))
+        .returning();
+      
+      return result[0] || undefined;
+    } catch (error) {
+      console.error('Error updating booking:', error);
+      return undefined;
+    }
   }
 }
 
