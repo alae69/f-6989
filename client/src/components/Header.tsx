@@ -58,11 +58,11 @@ const Header = () => {
             <Link to="/" className="flex items-center space-x-2">
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-moroccan-blue flex items-center justify-center rounded-md shadow-md">
-                  <span className="text-white font-serif text-xl font-bold">M</span>
+                  <span className="text-white font-serif text-xl font-bold">B</span>
                 </div>
                 <div className="ml-2 font-serif flex items-center">
-                  <span className="text-moroccan-blue text-xl font-medium">Martil</span>
-                  <span className="text-moroccan-gold text-xl font-medium">Haven</span>
+                  <span className="text-moroccan-blue text-xl font-medium">Blue</span>
+                  <span className="text-moroccan-gold text-xl font-medium">Bay</span>
                 </div>
               </div>
             </Link>

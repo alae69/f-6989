@@ -14,15 +14,15 @@ const Footer = () => {
           <div className="col-span-1 lg:col-span-1">
             <Link to="/" className="flex items-center space-x-3 mb-5">
               <div className="bg-moroccan-blue text-white p-2.5 rounded-lg shadow-md">
-                <span className="font-serif text-lg">M</span>
+                <span className="font-serif text-lg">B</span>
               </div>
               <div className="font-serif text-xl text-white">
-                <span className="text-sky-900">Martil</span>
-                <span className="text-moroccan-gold">Haven</span>
+                <span className="text-sky-900">Blue</span>
+                <span className="text-moroccan-gold">Bay</span>
               </div>
             </Link>
             <p className="text-sm mb-6 leading-relaxed text-[rgb(107_114_128)] font-bold">
-              Discover beautiful vacation properties in Martil, Morocco. Experience the perfect blend of Moroccan hospitality and modern luxury on the Mediterranean coast.
+              Discover beautiful vacation properties in BlueBay, Morocco. Experience the perfect blend of Moroccan hospitality and modern luxury on the Mediterranean coast.
             </p>
             <div className="flex space-x-5">
               <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200">
@@ -114,11 +114,11 @@ const Footer = () => {
             <address className="not-italic text-gray-500 space-y-4">
               <p className="flex items-start">
                 <MapPin className="h-5 w-5 mr-3 text-moroccan-gold mt-0.5" />
-                <span>Boulevard Mohammed V<br />Martil, Morocco</span>
+                <span>Boulevard Mohammed V<br />BlueBay, Morocco</span>
               </p>
               <p className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-moroccan-gold" />
-                <a href="mailto:info@martilhaven.com" className="hover:text-moroccan-gold transition-colors">info@martilhaven.com</a>
+                <a href="mailto:info@bluebay.com" className="hover:text-moroccan-gold transition-colors">info@bluebay.com</a>
               </p>
               <p className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 text-moroccan-gold" />
@@ -129,7 +129,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {currentYear} MartilHaven. All rights reserved.</p>
+          <p>&copy; {currentYear} BlueBay. All rights reserved.</p>
           <div className="mt-3 space-x-6">
             <Link to="/privacy-policy" className="hover:text-moroccan-gold transition duration-200">
               Privacy Policy

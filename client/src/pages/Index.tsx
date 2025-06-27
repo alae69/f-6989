@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -16,30 +17,30 @@ const Index = () => {
         {/* Featured Properties Section */}
         <FeaturedProperties />
         
-        {/* About Martil Section */}
+        {/* About BlueBay Section */}
         <section className="py-16 bg-white">
           <div className="container-custom">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
                   src="https://images.unsplash.com/photo-1469041797191-50ace28483c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                  alt="Martil Beach" 
+                  alt="BlueBay Beach" 
                   className="rounded-lg shadow-lg"
                 />
               </div>
               <div>
-                <h2 className="section-title">Experience the Beauty of Martil</h2>
+                <h2 className="section-title">Experience the Beauty of BlueBay</h2>
                 <p className="text-gray-700 mb-4">
-                  Nestled on Morocco's stunning Mediterranean coast, Martil is a charming seaside town known for its beautiful beaches, vibrant culture, and relaxed atmosphere.
+                  Nestled on Morocco's stunning Mediterranean coast, BlueBay is a charming seaside town known for its beautiful beaches, vibrant culture, and relaxed atmosphere.
                 </p>
                 <p className="text-gray-700 mb-4">
-                  Just a short drive from Tetouan, Martil offers visitors a perfect blend of authentic Moroccan traditions and modern coastal living. The town comes alive during summer when visitors from across Morocco and abroad flock to enjoy its pristine beaches and warm hospitality.
+                  Just a short drive from Tetouan, BlueBay offers visitors a perfect blend of authentic Moroccan traditions and modern coastal living. The town comes alive during summer when visitors from across Morocco and abroad flock to enjoy its pristine beaches and warm hospitality.
                 </p>
                 <p className="text-gray-700 mb-6">
-                  Whether you're looking for a luxurious beachfront villa, a traditional Moroccan riad, or a modern apartment, Martil Haven offers a curated selection of the finest accommodations in this Mediterranean paradise.
+                  Whether you're looking for a luxurious beachfront villa, a traditional Moroccan riad, or a modern apartment, BlueBay offers a curated selection of the finest accommodations in this Mediterranean paradise.
                 </p>
                 <Link to="/about" className="btn-outline">
-                  Learn More About Martil
+                  Learn More About BlueBay
                 </Link>
               </div>
             </div>
@@ -51,7 +52,7 @@ const Index = () => {
           <div className="container-custom">
             <h2 className="section-title text-center mx-auto">What Our Guests Say</h2>
             <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
-              Read about the experiences of guests who have stayed in our properties and discovered the magic of Martil.
+              Read about the experiences of guests who have stayed in our properties and discovered the magic of BlueBay.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -145,9 +146,9 @@ const Index = () => {
         {/* Call to Action Section */}
         <section className="py-16 bg-moroccan-blue text-white">
           <div className="container-custom text-center">
-            <h2 className="text-3xl font-serif font-medium mb-4">Ready to Experience Martil?</h2>
+            <h2 className="text-3xl font-serif font-medium mb-4">Ready to Experience BlueBay?</h2>
             <p className="max-w-2xl mx-auto mb-8 opacity-90">
-              Book your dream vacation property today and discover why Martil is one of Morocco's most beloved coastal destinations.
+              Book your dream vacation property today and discover why BlueBay is one of Morocco's most beloved coastal destinations.
             </p>
             <Link to="/properties" className="btn-secondary">
               Browse All Properties
