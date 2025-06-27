@@ -36,7 +36,7 @@ const BecomeHostPage = () => {
               $2,500 a month
             </h2>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in animate-delay-300">
-              hosting your place in Martil
+              hosting your coastal property
             </p>
             <Button 
               size="lg" 
@@ -51,7 +51,7 @@ const BecomeHostPage = () => {
         <section className="py-20 bg-white">
           <div className="container-custom">
             <h2 className="section-title text-center mx-auto mb-16">
-              Why host with Martil Haven?
+              Why host with BlueBay?
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -62,7 +62,7 @@ const BecomeHostPage = () => {
                 </div>
                 <h3 className="text-xl font-serif font-semibold mb-4">Earn extra income</h3>
                 <p className="text-gray-600">
-                  Turn your space into a source of income. Hosts in Martil earn an average of $2,500 per month.
+                  Turn your space into a source of income. Hosts in coastal areas earn an average of $2,500 per month.
                 </p>
               </div>
 
@@ -73,7 +73,7 @@ const BecomeHostPage = () => {
                 </div>
                 <h3 className="text-xl font-serif font-semibold mb-4">Meet new people</h3>
                 <p className="text-gray-600">
-                  Connect with travelers from around the world and share your love for Martil's culture.
+                  Connect with travelers from around the world and share your love for coastal culture.
                 </p>
               </div>
 

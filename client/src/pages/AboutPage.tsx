@@ -9,17 +9,17 @@ const AboutPage = () => {
   // Hero Section Content
   const heroContent = {
     backgroundImage: "https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1900&q=80",
-    title: "About MartilHaven",
-    subtitle: "Connecting travelers with exceptional vacation properties in beautiful Martil, Morocco."
+    title: "About BlueBay",
+    subtitle: "Connecting travelers with exceptional vacation properties along stunning coastal destinations."
   };
 
   // Our Story Content
   const storyContent = {
     title: "Our Story",
     paragraphs: [
-      "MartilHaven began with a simple vision: to showcase the beauty and charm of Martil, Morocco to travelers from around the world. Founded in 2020 by a group of Martil natives and travel enthusiasts, our mission is to provide visitors with authentic, high-quality accommodation experiences that highlight the unique character of this Mediterranean gem.",
-      "Each property in our collection is personally vetted by our team to ensure it meets our standards of quality, comfort, and authentic Moroccan hospitality. From luxurious beachfront villas to traditional riads in the heart of the medina, our diverse portfolio offers something for every type of traveler.",
-      "We believe that the right accommodation can transform a good vacation into an unforgettable one. That's why we work closely with property owners to maintain high standards and with guests to understand their needs and preferences. Our local knowledge and personalized service set us apart, helping travelers discover not just beautiful properties but the true essence of Martil."
+      "BlueBay began with a simple vision: to showcase the beauty and charm of coastal destinations to travelers from around the world. Founded in 2020 by a group of coastal natives and travel enthusiasts, our mission is to provide visitors with authentic, high-quality accommodation experiences that highlight the unique character of beautiful waterfront locations.",
+      "Each property in our collection is personally vetted by our team to ensure it meets our standards of quality, comfort, and authentic coastal hospitality. From luxurious beachfront villas to charming seaside cottages, our diverse portfolio offers something for every type of traveler.",
+      "We believe that the right accommodation can transform a good vacation into an unforgettable one. That's why we work closely with property owners to maintain high standards and with guests to understand their needs and preferences. Our local knowledge and personalized service set us apart, helping travelers discover not just beautiful properties but the true essence of coastal living."
     ]
   };
 

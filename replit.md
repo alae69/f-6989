@@ -1,8 +1,8 @@
-# MartilHaven - Vacation Rental Platform
+# BlueBay - Vacation Rental Platform
 
 ## Overview
 
-MartilHaven is a modern vacation rental platform built for properties in Martil, Morocco. The application is a full-stack web application that combines a React frontend with an Express.js backend, utilizing PostgreSQL for data persistence through Drizzle ORM.
+BlueBay is a modern vacation rental platform built for coastal properties. The application is a full-stack web application that combines a React frontend with an Express.js backend, utilizing PostgreSQL for data persistence through Drizzle ORM.
 
 ## System Architecture
 

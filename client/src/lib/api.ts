@@ -95,7 +95,7 @@ export const usersApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage
-      const savedUsers = localStorage.getItem('martilhaven_users');
+      const savedUsers = localStorage.getItem('bluebay_users');
       return savedUsers ? JSON.parse(savedUsers) : [];
     }
   },
@@ -124,7 +124,7 @@ export const usersApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage
-      const savedUsers = localStorage.getItem('martilhaven_users');
+      const savedUsers = localStorage.getItem('bluebay_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
       // Validate required fields
@@ -152,7 +152,7 @@ export const usersApi = {
       };
       
       users.push(newUser);
-      localStorage.setItem('martilhaven_users', JSON.stringify(users));
+      localStorage.setItem('bluebay_users', JSON.stringify(users));
       return newUser;
     }
   },
@@ -173,7 +173,7 @@ export const usersApi = {
       return response.json();
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
-      const savedUsers = localStorage.getItem('martilhaven_users');
+      const savedUsers = localStorage.getItem('bluebay_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
       const userIndex = users.findIndex((u: any) => u.id == id);
@@ -182,7 +182,7 @@ export const usersApi = {
       }
       
       users[userIndex] = { ...users[userIndex], ...user };
-      localStorage.setItem('martilhaven_users', JSON.stringify(users));
+      localStorage.setItem('bluebay_users', JSON.stringify(users));
       return users[userIndex];
     }
   },
@@ -199,7 +199,7 @@ export const usersApi = {
       return response.json();
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
-      const savedUsers = localStorage.getItem('martilhaven_users');
+      const savedUsers = localStorage.getItem('bluebay_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
       const userIndex = users.findIndex((u: any) => u.id == id);
@@ -208,7 +208,7 @@ export const usersApi = {
       }
       
       users.splice(userIndex, 1);
-      localStorage.setItem('martilhaven_users', JSON.stringify(users));
+      localStorage.setItem('bluebay_users', JSON.stringify(users));
       return { message: 'User deleted successfully' };
     }
   },
@@ -240,15 +240,15 @@ export const authApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage authentication with database seeded users
-      const savedUsers = localStorage.getItem('martilhaven_users');
+      const savedUsers = localStorage.getItem('bluebay_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
       // Default users matching database seed data
       const defaultUsers = [
-        { id: 1, username: "admin", password: "password123", role: "admin", name: "Admin User", email: "admin@martilhaven.com" },
-        { id: 2, username: "staff", password: "password123", role: "staff", name: "Staff User", email: "staff@martilhaven.com" },
-        { id: 3, username: "owner", password: "password123", role: "owner", name: "Property Owner", email: "owner@martilhaven.com" },
-        { id: 4, username: "user", password: "password123", role: "user", name: "Regular User", email: "user@martilhaven.com" },
+        { id: 1, username: "admin", password: "password123", role: "admin", name: "Admin User", email: "admin@bluebay.com" },
+        { id: 2, username: "staff", password: "password123", role: "staff", name: "Staff User", email: "staff@bluebay.com" },
+        { id: 3, username: "owner", password: "password123", role: "owner", name: "Property Owner", email: "owner@bluebay.com" },
+        { id: 4, username: "user", password: "password123", role: "user", name: "Regular User", email: "user@bluebay.com" },
       ];
       
       const allUsers = [...defaultUsers, ...users];
@@ -298,7 +298,7 @@ export const authApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage registration
-      const savedUsers = localStorage.getItem('martilhaven_users');
+      const savedUsers = localStorage.getItem('bluebay_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
       
       // Check for existing user
@@ -328,7 +328,7 @@ export const authApi = {
       };
       
       users.push(newUser);
-      localStorage.setItem('martilhaven_users', JSON.stringify(users));
+      localStorage.setItem('bluebay_users', JSON.stringify(users));
       
       return {
         success: true,
