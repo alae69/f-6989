@@ -44,8 +44,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
     'Pool', 'Parking', 'Garden', 'Balcony', 'Pet friendly'
   ];
 
-    // City and places data
-    const cityPlaces = {
+    // City and places data with proper typing
+    const cityPlaces: Record<string, string[]> = {
       'Martil': [
         'Martil Beach',
         'Martil Center',
@@ -277,7 +277,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, onCance
                   className="w-full border border-gray-300 rounded-lg px-3 py-2"
                 >
                   <option value="">Select a place</option>
-                  {cityPlaces[selectedCity].map(place => (
+                  {cityPlaces[selectedCity]?.map((place: string) => (
                     <option key={place} value={place}>{place}</option>
                   ))}
                 </select>

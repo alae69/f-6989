@@ -6,12 +6,13 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PropertyDetails from '@/components/PropertyDetails';
 import PropertyCard from '@/components/PropertyCard';
+import { Property } from '@/data/properties';
 
 const PropertyPage = () => {
   const { id } = useParams<{ id: string }>();
   const { properties } = useProperties();
   const [property, setProperty] = useState(properties.find(p => p.id === id));
-  const [similarProperties, setSimilarProperties] = useState([]);
+  const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
 
   useEffect(() => {
     // Find the current property

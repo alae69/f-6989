@@ -10,13 +10,14 @@ import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Check, X, Eye, Plus, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Property } from '@/data/properties';
 
 const AdminProperties = () => {
   const { properties, updateProperty, addProperty } = useProperties();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddingProperty, setIsAddingProperty] = useState(false);
-  const [editingProperty, setEditingProperty] = useState(null);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
 
   // Filter properties based on search term
   const filteredProperties = properties.filter(property => 
