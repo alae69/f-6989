@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 (async () => {
   // Seed the database with initial data
   await seedDatabase();
-  
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 
   // Serve the app on port 80 for Replit environment
   // this serves both the API and the client.
-  const port = process.env.PORT || 80;
+  const port = process.env.PORT || (app.get("env") === "development" ? 5000 : 80);
   server.listen({
     port,
     host: "0.0.0.0",
