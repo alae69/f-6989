@@ -1,15 +1,26 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { Search, MapPin, Calendar, Users } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const SearchBar = () => {
   const navigate = useNavigate();
-  const [location, setLocation] = useState('Martil, Morocco');
+  const [location, setLocation] = useState('');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
+  
+  const locationOptions = [
+    { value: 'martil', label: 'Martil, Morocco' },
+    { value: 'tetouan', label: 'Tetouan, Morocco' },
+    { value: 'tangier', label: 'Tangier, Morocco' },
+    { value: 'asilah', label: 'Asilah, Morocco' },
+    { value: 'chefchaouen', label: 'Chefchaouen, Morocco' },
+    { value: 'cabo-negro', label: 'Cabo Negro, Morocco' },
+    { value: 'mdiq', label: 'M\'diq, Morocco' },
+    { value: 'fnideq', label: 'Fnideq, Morocco' }
+  ];
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +29,7 @@ const SearchBar = () => {
     if (!location) {
       toast({
         title: "Location required",
-        description: "Please enter a location to search.",
+        description: "Please select a location to search.",
         variant: "destructive",
       });
       return;
@@ -40,14 +51,15 @@ const SearchBar = () => {
     
     // Navigate with search params
     const searchParams = new URLSearchParams();
-    if (location) searchParams.set('location', location);
+    const selectedLocation = locationOptions.find(opt => opt.value === location);
+    if (selectedLocation) searchParams.set('location', selectedLocation.label);
     if (checkIn) searchParams.set('checkIn', checkIn);
     if (checkOut) searchParams.set('checkOut', checkOut);
     searchParams.set('guests', guests.toString());
     
     toast({
       title: "Search started",
-      description: `Searching for properties in ${location}`,
+      description: `Searching for properties in ${selectedLocation?.label || location}`,
     });
     
     // Navigate to properties page with search params
@@ -62,12 +74,18 @@ const SearchBar = () => {
             <MapPin className="w-3.5 h-3.5 mr-1 text-moroccan-blue" />
             Location
           </label>
-          <input
-            type="text"
-            className="w-full text-gray-900 focus:outline-none"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
+          <Select value={location} onValueChange={setLocation}>
+            <SelectTrigger className="w-full border-0 p-0 h-auto bg-transparent focus:ring-0 shadow-none">
+              <SelectValue placeholder="Select a location" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border shadow-lg">
+              {locationOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
         <div className="p-3 border-b md:border-b-0 md:border-r border-gray-200">
