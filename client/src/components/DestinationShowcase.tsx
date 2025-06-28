@@ -6,11 +6,18 @@ import { MapPin, Camera, Star } from 'lucide-react';
 const DestinationShowcase: React.FC = () => {
   const destinations = [
     {
-      name: 'Chefchaouen',
+      name: 'Cabo Negro',
+      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      description: 'Pristine beaches and luxury coastal resorts with breathtaking Atlantic views',
+      properties: 18,
+      avgRating: 4.8
+    },
+    {
+      name: 'Tetouan',
       image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73999?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Stay in the enchanting Blue Pearl nestled in the Rif Mountains',
-      properties: 28,
-      avgRating: 4.9
+      description: 'Rich Andalusian heritage and traditional Moroccan architecture in the heart of the Rif',
+      properties: 25,
+      avgRating: 4.7
     },
     {
       name: 'Marina Smir',
