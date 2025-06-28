@@ -12,14 +12,20 @@ const SearchBar = () => {
   const [guests, setGuests] = useState(1);
   
   const locationOptions = [
-    { value: 'martil', label: 'Martil, Morocco' },
-    { value: 'tetouan', label: 'Tetouan, Morocco' },
-    { value: 'tangier', label: 'Tangier, Morocco' },
-    { value: 'asilah', label: 'Asilah, Morocco' },
-    { value: 'chefchaouen', label: 'Chefchaouen, Morocco' },
-    { value: 'cabo-negro', label: 'Cabo Negro, Morocco' },
-    { value: 'mdiq', label: 'M\'diq, Morocco' },
-    { value: 'fnideq', label: 'Fnideq, Morocco' }
+    { value: 'martil', label: 'Martil - Beach Paradise' },
+    { value: 'marrakech', label: 'Marrakech - Imperial City' },
+    { value: 'casablanca', label: 'Casablanca - Economic Capital' },
+    { value: 'fes', label: 'Fes - Cultural Heritage' },
+    { value: 'chefchaouen', label: 'Chefchaouen - Blue Pearl' },
+    { value: 'essaouira', label: 'Essaouira - Coastal Charm' },
+    { value: 'tangier', label: 'Tangier - Gateway to Africa' },
+    { value: 'rabat', label: 'Rabat - Royal Capital' },
+    { value: 'agadir', label: 'Agadir - Beach Resort' },
+    { value: 'ouarzazate', label: 'Ouarzazate - Desert Gateway' },
+    { value: 'merzouga', label: 'Merzouga - Sahara Experience' },
+    { value: 'atlas-mountains', label: 'Atlas Mountains - Mountain Retreat' },
+    { value: 'tetouan', label: 'Tetouan - Andalusian Heritage' },
+    { value: 'asilah', label: 'Asilah - Artistic Coast' }
   ];
   
   const handleSearch = (e: React.FormEvent) => {

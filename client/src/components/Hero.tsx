@@ -36,10 +36,10 @@ const Hero: React.FC = () => {
       <div className="container-custom relative z-10 text-white">
         <div className="max-w-2xl">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-medium mb-6 leading-tight animate-fade-up">
-            Experience <span className="text-moroccan-gold">Mediterranean Magic</span> on Martil's Pristine Coast
+            Discover <span className="text-moroccan-gold">Morocco's Hidden Gems</span> - From Martil to the Atlas Mountains
           </h1>
           <p className="text-lg md:text-xl opacity-90 mb-10 animate-fade-up animate-delay-100">
-            Discover elegant beachfront properties in Martil with panoramic ocean views and premium coastal amenities
+            Book unique accommodations across Morocco - beachfront villas in Martil, riads in Marrakech, mountain retreats in Chefchaouen, and desert camps in Sahara
           </p>
           
           {/* Enhanced Search Bar Container with beach-themed styling */}
@@ -51,8 +51,8 @@ const Hero: React.FC = () => {
           <div className="mt-16 grid grid-cols-3 gap-8 text-center animate-fade-up animate-delay-300">
             <div className="bg-white/15 backdrop-blur-sm rounded-lg py-5 px-3 border border-white/20 shadow-lg transform transition-all duration-300 hover:scale-105 hover:bg-white/20">
               <Sun className="h-6 w-6 mx-auto mb-2 text-moroccan-gold" />
-              <div className="text-3xl font-serif font-medium text-moroccan-gold mb-1">25+</div>
-              <div className="text-sm opacity-80">Beachfront Properties</div>
+              <div className="text-3xl font-serif font-medium text-moroccan-gold mb-1">150+</div>
+              <div className="text-sm opacity-80">Properties Across Morocco</div>
             </div>
             <div className="bg-white/15 backdrop-blur-sm rounded-lg py-5 px-3 border border-white/20 shadow-lg transform transition-all duration-300 hover:scale-105 hover:bg-white/20">
               <Umbrella className="h-6 w-6 mx-auto mb-2 text-moroccan-gold" />
@@ -61,8 +61,8 @@ const Hero: React.FC = () => {
             </div>
             <div className="bg-white/15 backdrop-blur-sm rounded-lg py-5 px-3 border border-white/20 shadow-lg transform transition-all duration-300 hover:scale-105 hover:bg-white/20">
               <Waves className="h-6 w-6 mx-auto mb-2 text-moroccan-gold" />
-              <div className="text-3xl font-serif font-medium text-moroccan-gold mb-1">1000+</div>
-              <div className="text-sm opacity-80">Happy Visitors</div>
+              <div className="text-3xl font-serif font-medium text-moroccan-gold mb-1">5000+</div>
+              <div className="text-sm opacity-80">Happy Travelers</div>
             </div>
           </div>
         </div>

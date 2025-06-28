@@ -5,6 +5,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Hero from '../components/Hero';
 import FeaturedProperties from '../components/FeaturedProperties';
+import DestinationShowcase from '../components/DestinationShowcase';
+import BookingAdvantages from '../components/BookingAdvantages';
+import InstantBooking from '../components/InstantBooking';
 
 const Index = () => {
   return (
@@ -14,8 +17,14 @@ const Index = () => {
       <main className="flex-grow">
         <Hero />
         
+        {/* Destination Showcase Section */}
+        <DestinationShowcase />
+        
         {/* Featured Properties Section */}
         <FeaturedProperties />
+        
+        {/* Booking Advantages Section */}
+        <BookingAdvantages />
         
         {/* About BlueBay Section */}
         <section className="py-16 bg-white">
@@ -47,6 +56,9 @@ const Index = () => {
           </div>
         </section>
         
+        {/* Instant Booking Section */}
+        <InstantBooking />
+        
         {/* Testimonials Section */}
         <section className="py-16 bg-moroccan-white">
           <div className="container-custom">
@@ -76,7 +88,7 @@ const Index = () => {
                   </svg>
                 </div>
                 <p className="text-gray-700 italic mb-4">
-                  "Our stay at the Luxury Villa was absolutely perfect. The views of the Mediterranean were breathtaking, and the villa itself was beautifully decorated with traditional Moroccan elements. The staff was incredibly attentive and helped us discover the best local experiences."
+                  "BayHaven made our Morocco dream trip come true! From the luxury riad in Marrakech to the beachfront villa in Martil, every property exceeded our expectations. The booking process was seamless and the local support team was incredible."
                 </p>
                 <div>
                   <h4 className="font-medium">Sophie & Pierre</h4>
@@ -104,7 +116,7 @@ const Index = () => {
                   </svg>
                 </div>
                 <p className="text-gray-700 italic mb-4">
-                  "The Traditional Moroccan Riad exceeded all our expectations. The intricate tilework, central courtyard with fountain, and rooftop terrace were all stunning. We loved being just minutes from the beach while still experiencing authentic Moroccan architecture and hospitality."
+                  "We booked a 10-day Morocco tour through BayHaven - staying in Fes, Chefchaouen, and ending in Essaouira. Each property was carefully selected and perfectly located. The variety of authentic accommodations made our journey unforgettable."
                 </p>
                 <div>
                   <h4 className="font-medium">Ahmed & Laila</h4>
@@ -132,7 +144,7 @@ const Index = () => {
                   </svg>
                 </div>
                 <p className="text-gray-700 italic mb-4">
-                  "We spent a wonderful week with our children at the Family Beach House. The direct beach access was perfect for the kids, and the large garden gave them plenty of space to play. The house was beautifully decorated and had all the amenities we needed for a comfortable stay."
+                  "Our family adventure in Morocco was perfectly planned with BayHaven. From the desert camp in Merzouga to the coastal apartment in Agadir, every stay was family-friendly with amazing amenities. The kids still talk about the camel rides and surfing lessons!"
                 </p>
                 <div>
                   <h4 className="font-medium">John & Maria</h4>
