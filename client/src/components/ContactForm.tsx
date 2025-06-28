@@ -4,6 +4,7 @@ import { useMessages } from '../contexts/MessagesContext';
 
 const ContactForm = () => {
   const { addMessage } = useMessages();
+  const { toast } = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
