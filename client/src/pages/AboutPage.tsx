@@ -17,7 +17,7 @@ const AboutPage = () => {
   const storyContent = {
     title: "Our Story",
     paragraphs: [
-      "BlueBay began with a simple vision: to showcase the beauty and charm of coastal destinations to travelers from around the world. Founded in 2020 by a group of coastal natives and travel enthusiasts, our mission is to provide visitors with authentic, high-quality accommodation experiences that highlight the unique character of beautiful waterfront locations.",
+      "BayHaven began with a simple vision: to showcase the beauty and charm of coastal destinations to travelers from around the world. Founded in 2020 by a group of coastal natives and travel enthusiasts, our mission is to provide visitors with authentic, high-quality accommodation experiences that highlight the unique character of beautiful waterfront locations.",
       "Each property in our collection is personally vetted by our team to ensure it meets our standards of quality, comfort, and authentic coastal hospitality. From luxurious beachfront villas to charming seaside cottages, our diverse portfolio offers something for every type of traveler.",
       "We believe that the right accommodation can transform a good vacation into an unforgettable one. That's why we work closely with property owners to maintain high standards and with guests to understand their needs and preferences. Our local knowledge and personalized service set us apart, helping travelers discover not just beautiful properties but the true essence of coastal living."
     ]

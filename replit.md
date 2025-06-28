@@ -1,8 +1,8 @@
-# BlueBay - Vacation Rental Platform
+# BayHaven - Vacation Rental Platform
 
 ## Overview
 
-BlueBay is a modern vacation rental platform built for coastal properties. The application is a full-stack web application that combines a React frontend with an Express.js backend, utilizing PostgreSQL for data persistence through Drizzle ORM.
+BayHaven is a modern vacation rental platform built for coastal properties. The application is a full-stack web application that combines a React frontend with an Express.js backend, utilizing PostgreSQL for data persistence through Drizzle ORM.
 
 ## System Architecture
 

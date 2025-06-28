@@ -17,12 +17,12 @@ const Footer = () => {
                 <span className="font-serif text-lg">B</span>
               </div>
               <div className="font-serif text-xl text-white">
-                <span className="text-sky-900">Blue</span>
-                <span className="text-moroccan-gold">Bay</span>
+                <span className="text-sky-900">Bay</span>
+                <span className="text-moroccan-gold">Haven</span>
               </div>
             </Link>
             <p className="text-sm mb-6 leading-relaxed text-[rgb(107_114_128)] font-bold">
-              Discover beautiful vacation properties in BlueBay, Morocco. Experience the perfect blend of Moroccan hospitality and modern luxury on the Mediterranean coast.
+              Discover beautiful vacation properties in BayHaven, Morocco. Experience the perfect blend of Moroccan hospitality and modern luxury on the Mediterranean coast.
             </p>
             <div className="flex space-x-5">
               <a href="#" className="text-gray-500 hover:text-moroccan-gold transition duration-200">
@@ -129,7 +129,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {currentYear} BlueBay. All rights reserved.</p>
+          <p>&copy; {currentYear} BayHaven. All rights reserved.</p>
           <div className="mt-3 space-x-6">
             <Link to="/privacy-policy" className="hover:text-moroccan-gold transition duration-200">
               Privacy Policy

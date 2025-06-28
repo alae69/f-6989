@@ -61,8 +61,8 @@ const Header = () => {
                   <span className="text-white font-serif text-xl font-bold">B</span>
                 </div>
                 <div className="ml-2 font-serif flex items-center">
-                  <span className="text-moroccan-blue text-xl font-medium">Blue</span>
-                  <span className="text-moroccan-gold text-xl font-medium">Bay</span>
+                  <span className="text-moroccan-blue text-xl font-medium">Bay</span>
+                  <span className="text-moroccan-gold text-xl font-medium">Haven</span>
                 </div>
               </div>
             </Link>

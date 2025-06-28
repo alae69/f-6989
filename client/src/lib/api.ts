@@ -1,4 +1,3 @@
-
 const API_BASE_URL = '/api';
 
 // Check if server is available
@@ -125,7 +124,7 @@ export const usersApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage
-      const savedUsers = localStorage.getItem('bluebay_users');
+      const savedUsers = localStorage.getItem('bayhaven_users');
       return savedUsers ? JSON.parse(savedUsers) : [];
     }
   },
@@ -139,13 +138,13 @@ export const usersApi = {
         },
         body: JSON.stringify(user),
       });
-      
+
       // Check if we got HTML instead of JSON (API routing issue)
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('text/html')) {
         throw new Error('API routing issue - using localStorage fallback');
       }
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || 'Failed to create user');
@@ -154,35 +153,35 @@ export const usersApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage
-      const savedUsers = localStorage.getItem('bluebay_users');
+      const savedUsers = localStorage.getItem('bayhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
-      
+
       // Validate required fields
       if (!user.username || !user.name || !user.email || !user.password) {
         throw new Error('Username, name, email, and password are required');
       }
-      
+
       // Check for duplicate username/email
       const existingUser = users.find((u: any) => 
         u.username === user.username || u.email === user.email
       );
-      
+
       if (existingUser) {
         throw new Error('Username or email already exists');
       }
-      
+
       // Generate unique ID
       const maxId = users.length > 0 ? Math.max(...users.map((u: any) => parseInt(u.id) || 0)) : 0;
-      
+
       const newUser = {
         ...user,
         id: (maxId + 1).toString(),
         registeredDate: new Date().toISOString().split('T')[0],
         lastLogin: '-'
       };
-      
+
       users.push(newUser);
-      localStorage.setItem('bluebay_users', JSON.stringify(users));
+      localStorage.setItem('bayhaven_users', JSON.stringify(users));
       return newUser;
     }
   },
@@ -203,16 +202,16 @@ export const usersApi = {
       return response.json();
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
-      const savedUsers = localStorage.getItem('bluebay_users');
+      const savedUsers = localStorage.getItem('bayhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
-      
+
       const userIndex = users.findIndex((u: any) => u.id == id);
       if (userIndex === -1) {
         throw new Error('User not found');
       }
-      
+
       users[userIndex] = { ...users[userIndex], ...user };
-      localStorage.setItem('bluebay_users', JSON.stringify(users));
+      localStorage.setItem('bayhaven_users', JSON.stringify(users));
       return users[userIndex];
     }
   },
@@ -229,16 +228,16 @@ export const usersApi = {
       return response.json();
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
-      const savedUsers = localStorage.getItem('bluebay_users');
+      const savedUsers = localStorage.getItem('bayhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
-      
+
       const userIndex = users.findIndex((u: any) => u.id == id);
       if (userIndex === -1) {
         throw new Error('User not found');
       }
-      
+
       users.splice(userIndex, 1);
-      localStorage.setItem('bluebay_users', JSON.stringify(users));
+      localStorage.setItem('bayhaven_users', JSON.stringify(users));
       return { message: 'User deleted successfully' };
     }
   },
@@ -255,13 +254,13 @@ export const authApi = {
         },
         body: JSON.stringify({ username, password }),
       });
-      
+
       // Check if we got HTML instead of JSON (API routing issue)
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('text/html')) {
         throw new Error('API routing issue - using localStorage fallback');
       }
-      
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -270,9 +269,9 @@ export const authApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage authentication with database seeded users
-      const savedUsers = localStorage.getItem('bluebay_users');
+      const savedUsers = localStorage.getItem('bayhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
-      
+
       // Default users matching database seed data
       const defaultUsers = [
         { id: 1, username: "admin", password: "password123", role: "admin", name: "Admin User", email: "admin@bluebay.com" },
@@ -280,13 +279,13 @@ export const authApi = {
         { id: 3, username: "owner", password: "password123", role: "owner", name: "Property Owner", email: "owner@bluebay.com" },
         { id: 4, username: "user", password: "password123", role: "user", name: "Regular User", email: "user@bluebay.com" },
       ];
-      
+
       const allUsers = [...defaultUsers, ...users];
-      
+
       const user = allUsers.find(u => 
         (u.username === username || u.email === username) && u.password === password
       );
-      
+
       if (user) {
         return {
           user: {
@@ -319,7 +318,7 @@ export const authApi = {
         },
         body: JSON.stringify(userData),
       });
-      
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || 'Registration failed');
@@ -328,22 +327,22 @@ export const authApi = {
     } catch (error) {
       console.warn('API not available, using localStorage fallback');
       // Fallback to localStorage registration
-      const savedUsers = localStorage.getItem('bluebay_users');
+      const savedUsers = localStorage.getItem('bayhaven_users');
       const users = savedUsers ? JSON.parse(savedUsers) : [];
-      
+
       // Check for existing user
       const existingUser = users.find((u: any) => 
         u.username === userData.username || u.email === userData.email
       );
-      
+
       if (existingUser) {
         throw new Error('Username or email already exists');
       }
-      
+
       if (userData.password.length < 8) {
         throw new Error('Password must be at least 8 characters long');
       }
-      
+
       const newUser = {
         id: users.length + 1,
         username: userData.username,
@@ -356,10 +355,10 @@ export const authApi = {
         registeredDate: new Date().toISOString().split('T')[0],
         lastLogin: '-'
       };
-      
+
       users.push(newUser);
-      localStorage.setItem('bluebay_users', JSON.stringify(users));
-      
+      localStorage.setItem('bayhaven_users', JSON.stringify(users));
+
       return {
         success: true,
         message: 'Registration successful',

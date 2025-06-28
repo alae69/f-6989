@@ -51,7 +51,7 @@ const BecomeHostPage = () => {
         <section className="py-20 bg-white">
           <div className="container-custom">
             <h2 className="section-title text-center mx-auto mb-16">
-              Why host with BlueBay?
+              Why host with BayHaven?
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
