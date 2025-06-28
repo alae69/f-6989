@@ -14,8 +14,7 @@ const SearchBar = () => {
   const locationOptions = [
     { value: 'martil', label: 'Martil - Beach Paradise' },
     { value: 'atlas-mountains', label: 'Atlas Mountains - Mountain Retreat' },
-    { value: 'tetouan', label: 'Tetouan - Andalusian Heritage' },
-    { value: 'asilah', label: 'Asilah - Artistic Coast' }
+    { value: 'tetouan', label: 'Tetouan - Andalusian Heritage' }
   ];
 
   const handleSearch = (e: React.FormEvent) => {

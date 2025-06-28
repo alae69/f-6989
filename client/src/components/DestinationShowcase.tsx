@@ -6,25 +6,11 @@ import { MapPin, Camera, Star } from 'lucide-react';
 const DestinationShowcase: React.FC = () => {
   const destinations = [
     {
-      name: 'Marrakech',
-      image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73999?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Experience the magic of the Red City with luxury riads and vibrant souks',
-      properties: 45,
-      avgRating: 4.8
-    },
-    {
       name: 'Chefchaouen',
       image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73999?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       description: 'Stay in the enchanting Blue Pearl nestled in the Rif Mountains',
       properties: 28,
       avgRating: 4.9
-    },
-    {
-      name: 'Essaouira',
-      image: 'https://images.unsplash.com/photo-1548016223-8c5a73a2b63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Coastal charm with windsurfing and Portuguese-influenced architecture',
-      properties: 32,
-      avgRating: 4.7
     },
     {
       name: 'Marina Smir',
