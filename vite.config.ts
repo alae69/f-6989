@@ -23,7 +23,7 @@ export default defineConfig(async ({ mode }) => ({
     emptyOutDir: true,
   },
   server: {
-    host: "::",
+    host: "0.0.0.0",
     port: 8080,
   },
 }));
