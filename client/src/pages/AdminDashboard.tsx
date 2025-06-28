@@ -226,7 +226,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-```
-
-```
-</replit_final_file>
