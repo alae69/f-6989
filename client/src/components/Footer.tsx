@@ -114,15 +114,15 @@ const Footer = () => {
             <address className="not-italic text-gray-500 space-y-4">
               <p className="flex items-start">
                 <MapPin className="h-5 w-5 mr-3 text-moroccan-gold mt-0.5" />
-                <span>Boulevard Mohammed V<br />BlueBay, Morocco</span>
+                <span>Boulevard Mohammed V<br />BayHaven, Morocco</span>
               </p>
               <p className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-moroccan-gold" />
-                <a href="mailto:info@bluebay.com" className="hover:text-moroccan-gold transition-colors">info@bluebay.com</a>
+                <a href="mailto:info@bayhaven.com" className="hover:text-moroccan-gold transition-colors">info@bayhaven.com</a>
               </p>
               <p className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 text-moroccan-gold" />
-                <a href="tel:+212-5XX-XX-XX-XX" className="hover:text-moroccan-gold transition-colors">+212 5XX XX XX XX</a>
+                <a href="tel:+212654698554" className="hover:text-moroccan-gold transition-colors">+212 654698554</a>
               </p>
             </address>
           </div>
@@ -136,9 +136,6 @@ const Footer = () => {
             </Link>
             <Link to="/terms-of-service" className="hover:text-moroccan-gold transition duration-200">
               Terms of Service
-            </Link>
-            <Link to="/sitemap" className="hover:text-moroccan-gold transition duration-200">
-              Sitemap
             </Link>
           </div>
         </div>

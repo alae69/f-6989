@@ -33,16 +33,16 @@ const ContactPage = () => {
                     <h3 className="text-lg font-medium mb-2">Visit Our Office</h3>
                     <address className="not-italic text-gray-600">
                       <p>Boulevard Mohammed V</p>
-                      <p>Martil, Morocco</p>
+                      <p>BayHaven, Morocco</p>
                     </address>
                   </div>
                   
                   <div>
                     <h3 className="text-lg font-medium mb-2">Contact Details</h3>
                     <div className="text-gray-600">
-                      <p>Email: info@martilhaven.com</p>
-                      <p>Phone: +212 5XX XX XX XX</p>
-                      <p>Fax: +212 5XX XX XX XX</p>
+                      <p>Email: info@bayhaven.com</p>
+                      <p>Phone: +212 654698554</p>
+                      <p>Fax: +212 654698554</p>
                     </div>
                   </div>
                   
@@ -60,7 +60,7 @@ const ContactPage = () => {
                 <div className="mt-10 h-80 bg-gray-200 rounded-lg overflow-hidden">
                   {/* In a real application, this would be a map */}
                   <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                    <div className="text-gray-500">Map of Martil Office Location</div>
+                    <div className="text-gray-500">Map of BayHaven Office Location</div>
                   </div>
                 </div>
               </div>

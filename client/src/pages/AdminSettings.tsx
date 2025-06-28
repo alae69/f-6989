@@ -48,7 +48,7 @@ const AdminSettings = () => {
                   type="email"
                   id="contactEmail"
                   className="w-full p-2 border border-gray-300 rounded-md"
-                  defaultValue="info@martilhaven.com"
+                  defaultValue="info@bayhaven.com"
                 />
               </div>
               <div>
