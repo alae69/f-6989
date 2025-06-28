@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { useToast } from "../hooks/use-toast";
+import { useMessages } from '../contexts/MessagesContext';
 
 const ContactForm = () => {
-  const { toast } = useToast();
+  const { addMessage } = useMessages();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
@@ -11,9 +11,9 @@ const ContactForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // In a real application, you would send this data to your backend
-    console.log({ name, email, subject, message });
+
+    // Add message to context
+    addMessage({ name, email, subject, message });
 
     // Show success toast notification
     toast({
@@ -31,7 +31,7 @@ const ContactForm = () => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
       <h2 className="text-2xl font-serif font-medium mb-6">Get in Touch</h2>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>

@@ -2,7 +2,7 @@ import React from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Users, Building, Calendar, DollarSign, TrendingUp, Settings, Plus, Edit, Eye } from 'lucide-react';
+import { Users, Building, Calendar, DollarSign, TrendingUp, Settings, Plus, Edit, Eye, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useProperties } from '../contexts/PropertiesContext';
 import { useBookings } from '../contexts/BookingsContext';
@@ -10,6 +10,13 @@ import { useBookings } from '../contexts/BookingsContext';
 const AdminDashboard = () => {
   const { properties } = useProperties();
   const { bookings } = useBookings();
+
+  // Mock messages data - replace with actual data fetching
+  const messages = [
+    { id: 1, name: 'John Doe', subject: 'Inquiry about property', message: 'I am interested in booking...', status: 'new', createdAt: new Date() },
+    { id: 2, name: 'Jane Smith', subject: 'Feedback on my stay', message: 'I had a wonderful time...', status: 'read', createdAt: new Date() },
+    { id: 3, name: 'David Lee', subject: 'Issue with booking', message: 'I am having trouble with...', status: 'new', createdAt: new Date() },
+  ];
 
   // Calculate stats
   const totalProperties = properties.length;
@@ -20,6 +27,8 @@ const AdminDashboard = () => {
   const totalRevenue = bookings
     .filter(b => b.status === 'confirmed')
     .reduce((sum, b) => sum + (b.amount || 0), 0);
+
+  const newMessages = messages.filter(m => m.status === 'new').length;
 
   const stats = [
     {
@@ -217,3 +226,7 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+```
+
+```
+</replit_final_file>

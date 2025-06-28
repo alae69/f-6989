@@ -25,11 +25,6 @@ const BookingAdvantages: React.FC = () => {
       description: 'Round-the-clock customer support in Arabic, French, English, and Spanish'
     },
     {
-      icon: CreditCard,
-      title: 'Flexible Payment',
-      description: 'Pay securely online or reserve now and pay later at the property'
-    },
-    {
       icon: MapPin,
       title: 'Local Expertise',
       description: 'Get insider tips and recommendations from our Morocco travel specialists'
