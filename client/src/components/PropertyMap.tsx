@@ -1,7 +1,7 @@
 
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
-import { Property } from '@/data/properties';
+import { Property } from '../data/properties';
 import { Link } from 'react-router-dom';
 import { MapPin, Home, Bath, Users, Star } from 'lucide-react';
 

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Property } from '@/data/properties';
+import { Property } from '../data/properties';
 import { MapPin, Star, Home, Bath, Users } from 'lucide-react';
 
 interface PropertyCardProps {

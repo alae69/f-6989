@@ -1,11 +1,11 @@
 import React from 'react';
-import StaffLayout from '@/components/StaffLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import StaffLayout from '../components/StaffLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
 import { Building, Calendar, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useProperties } from '@/contexts/PropertiesContext';
-import { useBookings } from '@/contexts/BookingsContext';
+import { useProperties } from '../contexts/PropertiesContext';
+import { useBookings } from '../contexts/BookingsContext';
 
 const StaffDashboard = () => {
   const { bookings } = useBookings();

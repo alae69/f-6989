@@ -1,11 +1,11 @@
 import React from 'react';
-import AdminLayout from '@/components/AdminLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import AdminLayout from '../components/AdminLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
 import { Users, Building, Calendar, DollarSign, TrendingUp, Settings, Plus, Edit, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useProperties } from '@/contexts/PropertiesContext';
-import { useBookings } from '@/contexts/BookingsContext';
+import { useProperties } from '../contexts/PropertiesContext';
+import { useBookings } from '../contexts/BookingsContext';
 
 const AdminDashboard = () => {
   const { properties } = useProperties();

@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Building, Filter, Search } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
-import { useBookings } from "@/contexts/BookingsContext";
-import StaffLayout from '@/components/StaffLayout';
+import { useToast } from "../hooks/use-toast";
+import { useBookings } from "../contexts/BookingsContext";
+import StaffLayout from '../components/StaffLayout';
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../components/ui/table";
 
 const StaffBookings = () => {
   const { toast } = useToast();

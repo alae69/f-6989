@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Property } from '@/data/properties';
-import { useToast } from '@/hooks/use-toast';
+import { Property } from '../data/properties';
+import { useToast } from '../hooks/use-toast';
 import { Plus, Trash2, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface PropertyFormProps {
   property?: Property;

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Property } from '@/data/properties';
+import { Property } from '../data/properties';
 import BookingForm from './BookingForm';
 
 interface PropertyDetailsProps {

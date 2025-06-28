@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Property } from '@/data/properties';
-import { propertiesApi } from "@/lib/api";
+import { Property } from '../data/properties';
+import { propertiesApi } from "../lib/api";
 
 interface PropertiesContextType {
   properties: Property[];

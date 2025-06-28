@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropertyCard from './PropertyCard';
-import { useProperties } from '@/contexts/PropertiesContext';
+import { useProperties } from '../contexts/PropertiesContext';
 
 const FeaturedProperties: React.FC = () => {
   const { properties, loading } = useProperties();

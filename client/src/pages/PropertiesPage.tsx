@@ -1,14 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { useProperties } from '@/contexts/PropertiesContext';
-import { Property } from '@/data/properties';
-import PropertyCard from '@/components/PropertyCard';
-import PropertyMap from '@/components/PropertyMap';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { useProperties } from '../contexts/PropertiesContext';
+import { Property } from '../data/properties';
+import PropertyCard from '../components/PropertyCard';
+import PropertyMap from '../components/PropertyMap';
 import { MapPin, List, SlidersHorizontal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 
 const PropertiesPage = () => {
   const { properties } = useProperties();

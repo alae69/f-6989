@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { bookingsApi } from "@/lib/api";
+import { bookingsApi } from "../lib/api";
 
 export interface Booking {
   id: string;

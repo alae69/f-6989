@@ -1,17 +1,17 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import PropertyForm from '@/components/PropertyForm';
-import { useProperties } from '@/contexts/PropertiesContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Property } from '@/data/properties';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import PropertyForm from '../components/PropertyForm';
+import { useProperties } from '../contexts/PropertiesContext';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Badge } from '../components/ui/badge';
+import { Property } from '../data/properties';
 import { Pencil, Plus, Trash2, Eye, Home, DollarSign, Calendar, MapPin, Users, Star, TrendingUp, Settings } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 const OwnerDashboard = () => {
   const navigate = useNavigate();

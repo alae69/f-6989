@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useProperties } from '@/contexts/PropertiesContext';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import PropertyDetails from '@/components/PropertyDetails';
-import PropertyCard from '@/components/PropertyCard';
-import { Property } from '@/data/properties';
+import { useProperties } from '../contexts/PropertiesContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import PropertyDetails from '../components/PropertyDetails';
+import PropertyCard from '../components/PropertyCard';
+import { Property } from '../data/properties';
 
 const PropertyPage = () => {
   const { id } = useParams<{ id: string }>();

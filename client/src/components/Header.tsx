@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { List, X } from "lucide-react";
 import AuthModal from "./AuthModal";
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import Navigation from "./Navigation";
 import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);

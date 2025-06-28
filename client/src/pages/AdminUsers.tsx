@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { User, Search, Filter, Edit, Trash2, Check, Plus } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
-import AdminLayout from '@/components/AdminLayout';
-import { Button } from '@/components/ui/button';
-import UserEditModal from '@/components/UserEditModal';
-import { usersApi } from '@/lib/api';
+import { useToast } from "../hooks/use-toast";
+import AdminLayout from '../components/AdminLayout';
+import { Button } from '../components/ui/button';
+import UserEditModal from '../components/UserEditModal';
+import { usersApi } from '../lib/api';
 import {
   Table,
   TableBody,
@@ -13,8 +13,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+} from "../components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 
 interface UserData {
   id: string;

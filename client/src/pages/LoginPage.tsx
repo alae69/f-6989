@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from '@/hooks/use-toast';
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { toast } from '../hooks/use-toast';
 import { 
   Form,
   FormControl,
@@ -11,11 +11,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage 
-} from "@/components/ui/form";
+} from "../components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { authApi } from '@/lib/api';
+import { authApi } from '../lib/api';
 
 // Define the schema for the login form
 const loginSchema = z.object({

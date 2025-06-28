@@ -2,15 +2,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { DollarSign, Users, Award, Handshake } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { Button } from '../components/ui/button';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "../components/ui/accordion";
 
 const BecomeHostPage = () => {
   return (

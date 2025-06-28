@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { useToast } from "@/hooks/use-toast";
-import { useBookings } from "@/contexts/BookingsContext";
+import { useToast } from "../hooks/use-toast";
+import { useBookings } from "../contexts/BookingsContext";
 import { useNavigate } from 'react-router-dom';
 
 interface BookingFormProps {

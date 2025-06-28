@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import AdminLayout from '@/components/AdminLayout';
-import PropertyForm from '@/components/PropertyForm';
-import { useProperties } from '@/contexts/PropertiesContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AdminLayout from '../components/AdminLayout';
+import PropertyForm from '../components/PropertyForm';
+import { useProperties } from '../contexts/PropertiesContext';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Checkbox } from '../components/ui/checkbox';
+import { Card, CardContent } from '../components/ui/card';
+import { useToast } from '../hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Check, X, Eye, Plus, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Property } from '@/data/properties';
+import { Property } from '../data/properties';
 
 const AdminProperties = () => {
   const { properties, updateProperty, addProperty } = useProperties();

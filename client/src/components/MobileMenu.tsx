@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { LogOut } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import Navigation from './Navigation';
 
 interface MobileMenuProps {

@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Building, Filter, Search, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { useBookings } from "@/contexts/BookingsContext";
+import { Button } from "../components/ui/button";
+import { useToast } from "../hooks/use-toast";
+import { useBookings } from "../contexts/BookingsContext";
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../components/ui/table";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
