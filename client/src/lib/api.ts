@@ -52,6 +52,36 @@ export const propertiesApi = {
       throw new Error('Failed to create property - server not available');
     }
   },
+
+  update: async (id: string, property: any) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/properties/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(property),
+      });
+      if (!response.ok) throw new Error('Failed to update property');
+      return response.json();
+    } catch (error) {
+      console.warn('API not available');
+      throw new Error('Failed to update property - server not available');
+    }
+  },
+
+  delete: async (id: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/properties/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete property');
+      return response.ok;
+    } catch (error) {
+      console.warn('API not available');
+      throw new Error('Failed to delete property - server not available');
+    }
+  },
 };
 
 // Bookings API
