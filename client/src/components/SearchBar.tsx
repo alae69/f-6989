@@ -10,27 +10,17 @@ const SearchBar = () => {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
-  
+
   const locationOptions = [
     { value: 'martil', label: 'Martil - Beach Paradise' },
-    { value: 'marrakech', label: 'Marrakech - Imperial City' },
-    { value: 'casablanca', label: 'Casablanca - Economic Capital' },
-    { value: 'fes', label: 'Fes - Cultural Heritage' },
-    { value: 'chefchaouen', label: 'Chefchaouen - Blue Pearl' },
-    { value: 'essaouira', label: 'Essaouira - Coastal Charm' },
-    { value: 'tangier', label: 'Tangier - Gateway to Africa' },
-    { value: 'rabat', label: 'Rabat - Royal Capital' },
-    { value: 'agadir', label: 'Agadir - Beach Resort' },
-    { value: 'ouarzazate', label: 'Ouarzazate - Desert Gateway' },
-    { value: 'merzouga', label: 'Merzouga - Sahara Experience' },
     { value: 'atlas-mountains', label: 'Atlas Mountains - Mountain Retreat' },
     { value: 'tetouan', label: 'Tetouan - Andalusian Heritage' },
     { value: 'asilah', label: 'Asilah - Artistic Coast' }
   ];
-  
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate inputs
     if (!location) {
       toast({
@@ -40,11 +30,11 @@ const SearchBar = () => {
       });
       return;
     }
-    
+
     if (checkIn && checkOut) {
       const checkInDate = new Date(checkIn);
       const checkOutDate = new Date(checkOut);
-      
+
       if (checkInDate >= checkOutDate) {
         toast({
           title: "Invalid dates",
@@ -54,7 +44,7 @@ const SearchBar = () => {
         return;
       }
     }
-    
+
     // Navigate with search params
     const searchParams = new URLSearchParams();
     const selectedLocation = locationOptions.find(opt => opt.value === location);
@@ -62,16 +52,16 @@ const SearchBar = () => {
     if (checkIn) searchParams.set('checkIn', checkIn);
     if (checkOut) searchParams.set('checkOut', checkOut);
     searchParams.set('guests', guests.toString());
-    
+
     toast({
       title: "Search started",
       description: `Searching for properties in ${selectedLocation?.label || location}`,
     });
-    
+
     // Navigate to properties page with search params
     navigate(`/properties?${searchParams.toString()}`);
   };
-  
+
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-elevated p-1.5">
       <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-4 gap-2">
@@ -93,7 +83,7 @@ const SearchBar = () => {
             </SelectContent>
           </Select>
         </div>
-        
+
         <div className="p-3 border-b md:border-b-0 md:border-r border-gray-200">
           <label className="flex items-center text-xs font-medium text-gray-500 mb-1">
             <Calendar className="w-3.5 h-3.5 mr-1 text-moroccan-blue" />
@@ -107,7 +97,7 @@ const SearchBar = () => {
             min={new Date().toISOString().split('T')[0]} // Today's date as minimum
           />
         </div>
-        
+
         <div className="p-3 border-b md:border-b-0 md:border-r border-gray-200">
           <label className="flex items-center text-xs font-medium text-gray-500 mb-1">
             <Calendar className="w-3.5 h-3.5 mr-1 text-moroccan-blue" />
@@ -121,7 +111,7 @@ const SearchBar = () => {
             min={checkIn || new Date().toISOString().split('T')[0]}
           />
         </div>
-        
+
         <div className="flex items-center space-x-3 p-3">
           <div className="flex-1">
             <label className="flex items-center text-xs font-medium text-gray-500 mb-1">
@@ -140,7 +130,7 @@ const SearchBar = () => {
               ))}
             </select>
           </div>
-          
+
           <button
             type="submit"
             className="h-full flex items-center space-x-2 bg-moroccan-blue hover:bg-moroccan-blue/90 text-white px-5 py-3 rounded-lg transition duration-300 shadow-button"
