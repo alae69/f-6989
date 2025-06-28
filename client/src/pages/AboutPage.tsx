@@ -8,8 +8,8 @@ const AboutPage = () => {
   
   // Hero Section Content
   const heroContent = {
-    backgroundImage: "https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1900&q=80",
-    title: "About BlueBay",
+    backgroundImage: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1900&q=80",
+    title: "About BayHaven",
     subtitle: "Connecting travelers with exceptional vacation properties along stunning coastal destinations."
   };
 

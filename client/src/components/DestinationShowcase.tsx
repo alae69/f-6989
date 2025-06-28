@@ -27,10 +27,10 @@ const DestinationShowcase: React.FC = () => {
       avgRating: 4.7
     },
     {
-      name: 'Sahara Desert',
-      image: 'https://images.unsplash.com/photo-1509773896068-7fd415d91e2e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Luxury desert camps under the stars for an unforgettable experience',
-      properties: 15,
+      name: 'Marina Smir',
+      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      description: 'Luxury marina resort with stunning Mediterranean views and world-class amenities',
+      properties: 22,
       avgRating: 4.9
     }
   ];
